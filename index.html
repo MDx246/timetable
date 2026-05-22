@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ตารางสอน 2569 — โรงเรียนดอนสีนวนฯ</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1a3a6b; --blue:#2e6db4; --blue-lt:#d9e8f7; --blue-md:#4a90d9;
+  --purple:#5c3d99; --purp-lt:#eee8f8; --purp-md:#8060bb;
+  --amber:#7d5700; --amber-lt:#fff9e6;
+  --orange:#7d4000; --org-lt:#ffe8cc;
+  --teal:#0f5c52; --teal-lt:#e0f4f1;
+  --green:#2e7d32; --grn-lt:#e8f5e9;
+  --red:#c62828;
+  --bg:#f4f6fb; --surface:#fff; --border:#dde3ee;
+  --text:#1a2233; --muted:#6b7a99;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* HEADER */
+header{background:var(--navy);color:#fff;padding:18px 28px 0;position:sticky;top:0;z-index:100;box-shadow:0 2px 14px rgba(26,58,107,.22);}
+.header-top{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+.school-icon{width:40px;height:40px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.school-name{font-size:15px;font-weight:600;}
+.school-sub{font-size:11.5px;color:rgba(255,255,255,.6);margin-top:2px;}
+.mode-tabs{display:flex;gap:2px;}
+.mode-tab{padding:8px 22px;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;border:none;background:rgba(255,255,255,.08);color:rgba(255,255,255,.65);border-radius:8px 8px 0 0;transition:all .18s;}
+.mode-tab.active{background:var(--bg);color:var(--navy);}
+.mode-tab:hover:not(.active){background:rgba(255,255,255,.16);color:#fff;}
+
+/* FILTER BAR */
+.filter-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:11px 28px;display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
+.filter-label{font-size:12px;color:var(--muted);font-weight:500;margin-right:2px;white-space:nowrap;}
+.chip{padding:5px 13px;border-radius:20px;border:1.5px solid var(--border);background:transparent;font-size:12.5px;font-family:inherit;font-weight:500;color:var(--text);cursor:pointer;transition:all .14s;white-space:nowrap;}
+.chip:hover{border-color:var(--blue);color:var(--blue);}
+.chip.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+
+/* MAIN */
+main{padding:20px 28px;}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;align-items:center;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);}
+.legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+
+/* TABLE */
+.table-wrap{background:var(--surface);border-radius:12px;border:1px solid var(--border);overflow-x:auto;box-shadow:0 2px 8px rgba(26,58,107,.06);}
+table{width:100%;border-collapse:collapse;min-width:700px;}
+th,td{padding:0;border:1px solid var(--border);text-align:center;vertical-align:middle;}
+.th-corner,.th-grade,.th-day,.th-teacher-hdr{background:var(--navy);color:#fff;font-size:13px;font-weight:600;padding:10px 14px;white-space:nowrap;}
+.th-period{font-size:11.5px;font-weight:600;padding:7px 5px;line-height:1.4;}
+.th-morning{background:var(--blue-lt);color:var(--navy);}
+.th-lunch{background:var(--amber-lt);color:var(--amber);}
+.th-afternoon{background:var(--org-lt);color:var(--orange);}
+
+/* row label cells */
+td.grade-label{background:var(--blue-md);color:#fff;font-weight:600;font-size:13px;padding:0 10px;white-space:nowrap;}
+td.grade-label.mid{background:var(--purple);}
+td.day-label{background:var(--blue);color:#fff;font-weight:600;font-size:13px;padding:8px 12px;white-space:nowrap;}
+td.teacher-day-label{background:var(--teal);color:#fff;font-weight:600;font-size:13px;padding:8px 12px;white-space:nowrap;}
+
+/* subject cells */
+.cell-subject{padding:7px 5px;font-size:12px;line-height:1.3;}
+tr:nth-child(even) .cell-subject{background:#f7f9fd;}
+.cell-subject .subj{font-weight:600;font-size:12px;display:block;}
+.cell-subject .meta{font-size:10.5px;color:var(--muted);display:block;margin-top:2px;}
+.cell-subject.special{background:var(--purp-lt)!important;}
+.cell-subject.special .subj{color:var(--purple);}
+.cell-subject.special .meta{color:var(--purp-md);}
+.cell-lunch{background:var(--amber-lt);color:var(--amber);font-size:11px;font-weight:500;padding:7px 4px;font-style:italic;}
+.cell-free{background:#f9fafc;color:#c0c8d8;font-size:11px;padding:7px 4px;}
+
+/* TEACHER STATS */
+.teacher-stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 18px;min-width:120px;text-align:center;}
+.stat-num{font-size:22px;font-weight:600;color:var(--navy);}
+.stat-label{font-size:11.5px;color:var(--muted);margin-top:2px;}
+
+@media(max-width:600px){header{padding:14px 16px 0;}main{padding:14px 16px;}.filter-bar{padding:10px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-top">
+    <div class="school-icon">🏫</div>
+    <div>
+      <div class="school-name">โรงเรียนดอนสีนวนฯ</div>
+      <div class="school-sub">ตารางสอน ปีการศึกษา 2569 ภาคเรียนที่ 1</div>
+    </div>
+  </div>
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="setMode('day')">รายวัน</button>
+    <button class="mode-tab" onclick="setMode('grade')">รายชั้น</button>
+    <button class="mode-tab" onclick="setMode('teacher')">รายครู</button>
+  </div>
+</header>
+<div class="filter-bar" id="filter-bar"></div>
+<main id="main-content"></main>
+
+<script>
+const DAYS=["จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์"];
+const GRADES=["ป.1","ป.2","ป.3","ป.4","ป.5","ป.6","ม.1","ม.2","ม.3"];
+const TEACHERS=["กวัญเนตร","ขวัญฤทัย","ขวัญเนตร","ฐิติมา","ณัฐวุฒิ","ธนพล","ธิดาวรรณ","ธีรพัฒน์","ประสิทธิ์","พรชนก","พิจิตรา","ลาวัลย์","สมภพ","สุณิษา","อนรรฆ","อุบลวรรณ"];
+const PERIODS=[
+  {label:"คาบ 1",time:"08.30–09.30",type:"morning"},
+  {label:"คาบ 2",time:"09.30–10.30",type:"morning"},
+  {label:"คาบ 3",time:"10.30–11.30",type:"morning"},
+  {label:"พักกลางวัน",time:"11.30–12.30",type:"lunch"},
+  {label:"คาบ 4",time:"12.30–13.30",type:"afternoon"},
+  {label:"คาบ 5",time:"13.30–14.30",type:"afternoon"},
+  {label:"คาบ 6",time:"14.30–15.30",type:"afternoon"},
+];
+const SPECIAL=new Set(["ชุมนุม","ลูกเสือ","อบรมสุดสัปดาห์","ลดเวลาเรียน"]);
+
+const DATA={
+  "จันทร์":{"ป.1":["ไทย|(อุบลวรรณ)","คณิต|(อุบลวรรณ)","อังกฤษ|(อุบลวรรณ)","วิทย์|(สุณิษา)","ต้านทุจริต|(อุบลวรรณ)","ลดเวลาเรียน|(อุบลวรรณ)"],"ป.2":["วิทย์|(สุณิษา)","ไทย|(พรชนก)","คณิต|(ขวัญฤทัย)","สุขศึกษา|(อนรรฆ)","อังกฤษ|(ขวัญฤทัย)","ลดเวลาเรียน|(ณัฐวุฒิ)"],"ป.3":["ไทย|(พรชนก)","คณิต|(ขวัญเนตร)","วิทย์|(สุณิษา)","อังกฤษ|(พรชนก)","สังคม|(ณัฐวุฒิ)","ลดเวลาเรียน|(สมภพ)"],"ป.4":["คณิต|(ลาวัลย์)","อังกฤษ|(ธิดาวรรณ)","พละ|(อนรรฆ)","สังคม|(ฐิติมา)","ไทย|(พรชนก)","หน้าที่พลเมือง|(ธนพล)"],"ป.5":["อังกฤษ|(ธิดาวรรณ)","คณิต|(ลาวัลย์)","อังกฤษสื่อสาร|(ธิดาวรรณ)","ดนตรี|(ธนพล)","ต้านทุจริต|(สุณิษา)","ไทย|(ธีรพัฒน์)"],"ป.6":["คณิต|(ขวัญเนตร)","ไทย|(ธีรพัฒน์)","การงานอาชีพ|(สมภพ)","เกษตร|(ณัฐวุฒิ)","หน้าที่พลเมือง|(ประสิทธิ์)","วิทย์|(สุณิษา)"],"ม.1":["วิทย์|(พิจิตรา)","คอมพิวเตอร์|(สมภพ)","ไทย|(ธีรพัฒน์)","คณิต|(ขวัญเนตร)","วิทย์เทคโน|(สมภพ)","อังกฤษ|(ธิดาวรรณ)"],"ม.2":["สังคม|(ฐิติมา)","หน้าที่พลเมือง|(ณัฐวุฒิ)","คณิต|(ขวัญเนตร)","วิทย์|(พิจิตรา)","ไทย|(ธีรพัฒน์)","สังคม|(ฐิติมา)"],"ม.3":["ดนตรี|(ธนพล)","สังคม|(ฐิติมา)","ศิลปะ|(ธนพล)","ไทย|(ธีรพัฒน์)","คณิต|(ขวัญเนตร)","สุขศึกษา|(อนรรฆ)"]},
+  "อังคาร":{"ป.1":["ไทย|(อุบลวรรณ)","คณิต|(อุบลวรรณ)","วิทย์|(สุณิษา)","วิทย์เทคโน|(สมภพ)","อังกฤษ|(อุบลวรรณ)","หน้าที่พลเมือง|(อุบลวรรณ)"],"ป.2":["หน้าที่พลเมือง|(ณัฐวุฒิ)","ไทย|(พรชนก)","คณิต|(ขวัญฤทัย)","อังกฤษ|(ขวัญฤทัย)","สังคม|(ณัฐวุฒิ)","ศิลปะ|(ธนพล)"],"ป.3":["ไทย|(พรชนก)","คณิต|(ขวัญเนตร)","สังคม|(ณัฐวุฒิ)","สุขศึกษา|(อนรรฆ)","หน้าที่พลเมือง|(ประสิทธิ์)","อังกฤษ|(พรชนก)"],"ป.4":["วิทย์เทคโน|(สมภพ)","คณิต|(ลาวัลย์)","ไทย|(พรชนก)","วิทย์พลังสิบ|(พิจิตรา)","ศิลปะ|(ธนพล)","ต้านทุจริต|(ประสิทธิ์)"],"ป.5":["คณิต|(ลาวัลย์)","สังคม|(ฐิติมา)","ไทย|(ธีรพัฒน์)","วิทย์|(สุณิษา)","หน้าที่พลเมือง|(สุณิษา)","เกษตร|(อนรรฆ)"],"ป.6":["ไทย|(ธีรพัฒน์)","อังกฤษ|(ธิดาวรรณ)","สังคม|(ฐิติมา)","คณิต|(ขวัญเนตร)","วิทย์เทคโน|(สมภพ)","วิทย์พลังสิบ|(สุณิษา)"],"ม.1":["คณิต|(ขวัญเนตร)","ไทย|(ธีรพัฒน์)","การงานอาชีพ|(ประสิทธิ์)","ไทย|(ธีรพัฒน์)","วิทย์|(พิจิตรา)","อังกฤษ|(ธิดาวรรณ)"],"ม.2":["อังกฤษ|(ธิดาวรรณ)","สุขศึกษา|(อนรรฆ)","คณิต|(ขวัญเนตร)","ศิลปะ|(ธนพล)","พละ|(อนรรฆ)","วิทย์|(พิจิตรา)"],"ม.3":["วิทย์|(พิจิตรา)","หน้าที่พลเมือง|(ณัฐวุฒิ)","วิทย์|(พิจิตรา)","สังคม|(ฐิติมา)","คณิต|(ขวัญเนตร)","คอมพิวเตอร์เพิ่มเติม|(สมภพ)"]},
+  "พุธ":{"ป.1":["ไทย|(อุบลวรรณ)","สุขศึกษา|(อนรรฆ)","คณิต|(อุบลวรรณ)","อังกฤษ|(อุบลวรรณ)","สังคม|(ณัฐวุฒิ)","ชุมนุม"],"ป.2":["ไทย|(พรชนก)","คณิต|(ขวัญฤทัย)","วิทย์เทคโน|(สมภพ)","วิทย์|(สุณิษา)","อังกฤษ|(ขวัญฤทัย)","ชุมนุม"],"ป.3":["วิทย์เทคโน|(สมภพ)","คณิต|(ขวัญเนตร)","ไทย|(พรชนก)","อังกฤษ|(พรชนก)","อังกฤษ|(พรชนก)","ชุมนุม"],"ป.4":["อังกฤษ|(ธิดาวรรณ)","ไทย|(พรชนก)","คณิต|(ลาวัลย์)","ประวัติ|(ณัฐวุฒิ)","เกษตร|(ธนพล)","ชุมนุม"],"ป.5":["คณิต|(ลาวัลย์)","วิทย์เทคโน|(สมภพ)","ไทย|(ธีรพัฒน์)","สุขศึกษา|(อนรรฆ)","พละ|(อนรรฆ)","ชุมนุม"],"ป.6":["พละ|(อนรรฆ)","ไทย|(ธีรพัฒน์)","อังกฤษ|(ธิดาวรรณ)","คณิต|(ขวัญเนตร)","ต้านทุจริต|(สุณิษา)","ชุมนุม"],"ม.1":["คณิตเพิ่มเติม|(ขวัญเนตร)","ดนตรี|(ธนพล)","สังคม|(ฐิติมา)","วิทย์|(พิจิตรา)","คอมพิวเตอร์|(สมภพ)","ชุมนุม"],"ม.2":["การงานอาชีพ|(ประสิทธิ์)","อังกฤษ|(ธิดาวรรณ)","วิทย์|(พิจิตรา)","ไทย|(ธีรพัฒน์)","คณิต|(ขวัญเนตร)","ชุมนุม"],"ม.3":["ประวัติ|(ณัฐวุฒิ)","วิทย์|(พิจิตรา)","คณิต|(ขวัญเนตร)","อังกฤษ|(ธิดาวรรณ)","สังคม|(ฐิติมา)","ชุมนุม"]},
+  "พฤหัสบดี":{"ป.1":["ไทย|(อุบลวรรณ)","ศิลปะ|(ธนพล)","คณิต|(อุบลวรรณ)","ประวัติ|(พิจิตรา)","อังกฤษ|(อุบลวรรณ)","ลูกเสือ"],"ป.2":["อังกฤษ|(ขวัญฤทัย)","สังคม|(ณัฐวุฒิ)","คณิต|(ขวัญฤทัย)","ไทย|(พรชนก)","งานบ้าน|(พิจิตรา)","ลูกเสือ"],"ป.3":["ประวัติ|(ณัฐวุฒิ)","คณิต|(ขวัญเนตร)","วิทย์|(สุณิษา)","ต้านทุจริต|(อนรรฆ)","ไทย|(พรชนก)","ลูกเสือ"],"ป.4":["วิทย์|(สุณิษา)","คณิต|(ลาวัลย์)","ไทย|(พรชนก)","สังคม|(ฐิติมา)","อังกฤษสื่อสาร|(สุณิษา)","ลูกเสือ"],"ป.5":["การงานอาชีพ|(สมภพ)","วิทย์|(สุณิษา)","คณิต|(ลาวัลย์)","ศิลปะ|(ธนพล)","ประวัติ|(ณัฐวุฒิ)","ลูกเสือ"],"ป.6":["ศิลปะ|(ธนพล)","สังคม|(ฐิติมา)","คณิต|(ขวัญเนตร)","ไทย|(ธีรพัฒน์)","อังกฤษ|(ธิดาวรรณ)","ลูกเสือ"],"ม.1":["คณิตเพิ่มเติม|(ขวัญเนตร)","อังกฤษ|(ธิดาวรรณ)","ศิลปะ|(ธนพล)","หน้าที่พลเมือง|(ณัฐวุฒิ)","สุขศึกษา|(อนรรฆ)","ลูกเสือ"],"ม.2":["ไทย|(ธีรพัฒน์)","คอมพิวเตอร์|(สมภพ)","วิทย์เพิ่มเติม|(พิจิตรา)","วิทย์เทคโน|(สมภพ)","ดนตรี|(ธนพล)","ลูกเสือ"],"ม.3":["วิทย์เพิ่มเติม|(พิจิตรา)","พละ|(อนรรฆ)","วิทย์เทคโน|(สมภพ)","อังกฤษ|(ธิดาวรรณ)","ไทย|(ธีรพัฒน์)","ลูกเสือ"]},
+  "ศุกร์":{"ป.1":["ไทย|(อุบลวรรณ)","คณิต|(อุบลวรรณ)","อังกฤษ|(อุบลวรรณ)","งานบ้าน|(อุบลวรรณ)","สังคม|(ณัฐวุฒิ)","อบรมสุดสัปดาห์"],"ป.2":["ประวัติ|(ธนพล)","คณิต|(ขวัญฤทัย)","ไทย|(พรชนก)","ต้านทุจริต|(อนรรฆ)","อังกฤษ|(ขวัญฤทัย)","อบรมสุดสัปดาห์"],"ป.3":["งานบ้าน|(พิจิตรา)","คณิต|(ขวัญเนตร)","ศิลปะ|(ธนพล)","อังกฤษ|(พรชนก)","ไทย|(พรชนก)","อบรมสุดสัปดาห์"],"ป.4":["สุขศึกษา|(อนรรฆ)","การงานอาชีพ|(ประสิทธิ์)","อังกฤษสื่อสาร|(สุณิษา)","ดนตรี|(ธนพล)","วิทย์|(สุณิษา)","อบรมสุดสัปดาห์"],"ป.5":["อังกฤษ|(ธิดาวรรณ)","ไทย|(ธีรพัฒน์)","สังคม|(ฐิติมา)","อังกฤษสื่อสาร|(ธิดาวรรณ)","วิทย์พลังสิบ|(พิจิตรา)","อบรมสุดสัปดาห์"],"ป.6":["วิทย์|(สุณิษา)","อังกฤษ|(ธิดาวรรณ)","สุขศึกษา|(อนรรฆ)","ประวัติ|(ณัฐวุฒิ)","ดนตรี|(ธนพล)","อบรมสุดสัปดาห์"],"ม.1":["คณิต|(ขวัญเนตร)","สังคม|(ฐิติมา)","ประวัติ|(ณัฐวุฒิ)","สังคม|(ฐิติมา)","พละ|(อนรรฆ)","อบรมสุดสัปดาห์"],"ม.2":["คอมพิวเตอร์|(สมภพ)","ประวัติ|(ณัฐวุฒิ)","อังกฤษ|(ธิดาวรรณ)","วิทย์เพิ่มเติม|(พิจิตรา)","สังคม|(ฐิติมา)","อบรมสุดสัปดาห์"],"ม.3":["ไทย|(ธีรพัฒน์)","วิทย์เพิ่มเติม|(พิจิตรา)","การงานอาชีพ|(ประสิทธิ์)","คอมพิวเตอร์เพิ่มเติม|(สมภพ)","อังกฤษ|(ธิดาวรรณ)","อบรมสุดสัปดาห์"]},
+};
+
+const TEACHER_DATA={
+  "ขวัญฤทัย":{"จันทร์":[null,null,{"subj":"คณิต","grade":"ป.2"},null,{"subj":"อังกฤษ","grade":"ป.2"},null],"อังคาร":[null,null,{"subj":"คณิต","grade":"ป.2"},{"subj":"อังกฤษ","grade":"ป.2"},null,null],"พุธ":[null,{"subj":"คณิต","grade":"ป.2"},null,null,{"subj":"อังกฤษ","grade":"ป.2"},null],"พฤหัสบดี":[{"subj":"อังกฤษ","grade":"ป.2"},null,{"subj":"คณิต","grade":"ป.2"},null,null,null],"ศุกร์":[null,{"subj":"คณิต","grade":"ป.2"},null,null,{"subj":"อังกฤษ","grade":"ป.2"},null]},
+  "ขวัญเนตร":{"จันทร์":[{"subj":"คณิต","grade":"ป.6"},{"subj":"คณิต","grade":"ป.3"},{"subj":"คณิต","grade":"ม.2"},{"subj":"คณิต","grade":"ม.1"},{"subj":"คณิต","grade":"ม.3"},null],"อังคาร":[{"subj":"คณิต","grade":"ม.1"},{"subj":"คณิต","grade":"ป.3"},{"subj":"คณิต","grade":"ม.2"},{"subj":"คณิต","grade":"ป.6"},{"subj":"คณิต","grade":"ม.3"},null],"พุธ":[{"subj":"คณิตเพิ่มเติม","grade":"ม.1"},{"subj":"คณิต","grade":"ป.3"},{"subj":"คณิต","grade":"ม.3"},{"subj":"คณิต","grade":"ป.6"},{"subj":"คณิต","grade":"ม.2"},null],"พฤหัสบดี":[{"subj":"คณิตเพิ่มเติม","grade":"ม.1"},{"subj":"คณิต","grade":"ป.3"},{"subj":"คณิต","grade":"ป.6"},null,null,null],"ศุกร์":[{"subj":"คณิต","grade":"ม.1"},{"subj":"คณิต","grade":"ป.3"},null,null,null,null]},
+  "ฐิติมา":{"จันทร์":[{"subj":"สังคม","grade":"ม.2"},{"subj":"สังคม","grade":"ม.3"},null,{"subj":"สังคม","grade":"ป.4"},null,{"subj":"สังคม","grade":"ม.2"}],"อังคาร":[null,{"subj":"สังคม","grade":"ป.5"},{"subj":"สังคม","grade":"ป.6"},{"subj":"สังคม","grade":"ม.3"},null,null],"พุธ":[null,null,{"subj":"สังคม","grade":"ม.1"},null,{"subj":"สังคม","grade":"ม.3"},null],"พฤหัสบดี":[null,{"subj":"สังคม","grade":"ป.6"},null,{"subj":"สังคม","grade":"ป.4"},null,null],"ศุกร์":[null,{"subj":"สังคม","grade":"ม.1"},{"subj":"สังคม","grade":"ป.5"},{"subj":"สังคม","grade":"ม.1"},{"subj":"สังคม","grade":"ม.2"},null]},
+  "ณัฐวุฒิ":{"จันทร์":[null,{"subj":"หน้าที่พลเมือง","grade":"ม.2"},null,{"subj":"เกษตร","grade":"ป.6"},{"subj":"สังคม","grade":"ป.3"},{"subj":"ลดเวลาเรียน","grade":"ป.2"}],"อังคาร":[{"subj":"หน้าที่พลเมือง","grade":"ป.2"},{"subj":"หน้าที่พลเมือง","grade":"ม.3"},{"subj":"สังคม","grade":"ป.3"},null,{"subj":"สังคม","grade":"ป.2"},null],"พุธ":[{"subj":"ประวัติ","grade":"ม.3"},null,null,{"subj":"ประวัติ","grade":"ป.4"},{"subj":"สังคม","grade":"ป.1"},null],"พฤหัสบดี":[{"subj":"ประวัติ","grade":"ป.3"},{"subj":"สังคม","grade":"ป.2"},null,{"subj":"หน้าที่พลเมือง","grade":"ม.1"},{"subj":"ประวัติ","grade":"ป.5"},null],"ศุกร์":[null,{"subj":"ประวัติ","grade":"ม.2"},{"subj":"ประวัติ","grade":"ม.1"},{"subj":"ประวัติ","grade":"ป.6"},{"subj":"สังคม","grade":"ป.1"},null]},
+  "ธนพล":{"จันทร์":[{"subj":"ดนตรี","grade":"ม.3"},null,{"subj":"ศิลปะ","grade":"ม.3"},{"subj":"ดนตรี","grade":"ป.5"},null,{"subj":"หน้าที่พลเมือง","grade":"ป.4"}],"อังคาร":[null,null,null,{"subj":"ศิลปะ","grade":"ม.2"},{"subj":"ศิลปะ","grade":"ป.4"},{"subj":"ศิลปะ","grade":"ป.2"}],"พุธ":[null,{"subj":"ดนตรี","grade":"ม.1"},null,null,{"subj":"เกษตร","grade":"ป.4"},null],"พฤหัสบดี":[{"subj":"ศิลปะ","grade":"ป.6"},{"subj":"ศิลปะ","grade":"ป.1"},{"subj":"ศิลปะ","grade":"ม.1"},{"subj":"ศิลปะ","grade":"ป.5"},{"subj":"ดนตรี","grade":"ม.2"},null],"ศุกร์":[{"subj":"ประวัติ","grade":"ป.2"},null,{"subj":"ศิลปะ","grade":"ป.3"},{"subj":"ดนตรี","grade":"ป.4"},{"subj":"ดนตรี","grade":"ป.6"},null]},
+  "ธิดาวรรณ":{"จันทร์":[{"subj":"อังกฤษ","grade":"ป.5"},{"subj":"อังกฤษ","grade":"ป.4"},{"subj":"อังกฤษสื่อสาร","grade":"ป.5"},null,null,{"subj":"อังกฤษ","grade":"ม.1"}],"อังคาร":[{"subj":"อังกฤษ","grade":"ม.2"},{"subj":"อังกฤษ","grade":"ป.6"},null,null,null,{"subj":"อังกฤษ","grade":"ม.1"}],"พุธ":[{"subj":"อังกฤษ","grade":"ป.4"},{"subj":"อังกฤษ","grade":"ม.2"},{"subj":"อังกฤษ","grade":"ป.6"},{"subj":"อังกฤษ","grade":"ม.3"},null,null],"พฤหัสบดี":[null,{"subj":"อังกฤษ","grade":"ม.1"},null,{"subj":"อังกฤษ","grade":"ม.3"},{"subj":"อังกฤษ","grade":"ป.6"},null],"ศุกร์":[{"subj":"อังกฤษ","grade":"ป.5"},{"subj":"อังกฤษ","grade":"ป.6"},{"subj":"อังกฤษ","grade":"ม.2"},{"subj":"อังกฤษสื่อสาร","grade":"ป.5"},{"subj":"อังกฤษ","grade":"ม.3"},null]},
+  "ธีรพัฒน์":{"จันทร์":[null,{"subj":"ไทย","grade":"ป.6"},{"subj":"ไทย","grade":"ม.1"},{"subj":"ไทย","grade":"ม.3"},{"subj":"ไทย","grade":"ม.2"},{"subj":"ไทย","grade":"ป.5"}],"อังคาร":[{"subj":"ไทย","grade":"ป.6"},{"subj":"ไทย","grade":"ม.1"},{"subj":"ไทย","grade":"ป.5"},{"subj":"ไทย","grade":"ม.1"},null,null],"พุธ":[null,{"subj":"ไทย","grade":"ป.6"},{"subj":"ไทย","grade":"ป.5"},{"subj":"ไทย","grade":"ม.2"},null,null],"พฤหัสบดี":[{"subj":"ไทย","grade":"ม.2"},null,null,{"subj":"ไทย","grade":"ป.6"},{"subj":"ไทย","grade":"ม.3"},null],"ศุกร์":[{"subj":"ไทย","grade":"ม.3"},{"subj":"ไทย","grade":"ป.5"},null,null,null,null]},
+  "ประสิทธิ์":{"จันทร์":[null,null,null,null,{"subj":"หน้าที่พลเมือง","grade":"ป.6"},null],"อังคาร":[null,null,{"subj":"การงานอาชีพ","grade":"ม.1"},null,{"subj":"หน้าที่พลเมือง","grade":"ป.3"},{"subj":"ต้านทุจริต","grade":"ป.4"}],"พุธ":[{"subj":"การงานอาชีพ","grade":"ม.2"},null,null,null,null,null],"พฤหัสบดี":[null,null,null,null,null,null],"ศุกร์":[null,{"subj":"การงานอาชีพ","grade":"ป.4"},{"subj":"การงานอาชีพ","grade":"ม.3"},null,null,null]},
+  "พรชนก":{"จันทร์":[{"subj":"ไทย","grade":"ป.3"},{"subj":"ไทย","grade":"ป.2"},null,{"subj":"อังกฤษ","grade":"ป.3"},{"subj":"ไทย","grade":"ป.4"},null],"อังคาร":[{"subj":"ไทย","grade":"ป.3"},{"subj":"ไทย","grade":"ป.2"},{"subj":"ไทย","grade":"ป.4"},null,null,{"subj":"อังกฤษ","grade":"ป.3"}],"พุธ":[{"subj":"ไทย","grade":"ป.2"},{"subj":"ไทย","grade":"ป.4"},{"subj":"ไทย","grade":"ป.3"},{"subj":"อังกฤษ","grade":"ป.3"},{"subj":"อังกฤษ","grade":"ป.3"},null],"พฤหัสบดี":[null,null,{"subj":"ไทย","grade":"ป.4"},{"subj":"ไทย","grade":"ป.2"},{"subj":"ไทย","grade":"ป.3"},null],"ศุกร์":[null,null,{"subj":"ไทย","grade":"ป.2"},{"subj":"อังกฤษ","grade":"ป.3"},{"subj":"ไทย","grade":"ป.3"},null]},
+  "พิจิตรา":{"จันทร์":[{"subj":"วิทย์","grade":"ม.1"},null,null,{"subj":"วิทย์","grade":"ม.2"},null,null],"อังคาร":[{"subj":"วิทย์","grade":"ม.3"},null,{"subj":"วิทย์","grade":"ม.3"},{"subj":"วิทย์พลังสิบ","grade":"ป.4"},{"subj":"วิทย์","grade":"ม.1"},{"subj":"วิทย์","grade":"ม.2"}],"พุธ":[null,{"subj":"วิทย์","grade":"ม.3"},{"subj":"วิทย์","grade":"ม.2"},{"subj":"วิทย์","grade":"ม.1"},null,null],"พฤหัสบดี":[{"subj":"วิทย์เพิ่มเติม","grade":"ม.3"},null,{"subj":"วิทย์เพิ่มเติม","grade":"ม.2"},{"subj":"ประวัติ","grade":"ป.1"},{"subj":"งานบ้าน","grade":"ป.2"},null],"ศุกร์":[{"subj":"งานบ้าน","grade":"ป.3"},{"subj":"วิทย์เพิ่มเติม","grade":"ม.3"},null,{"subj":"วิทย์เพิ่มเติม","grade":"ม.2"},{"subj":"วิทย์พลังสิบ","grade":"ป.5"},null]},
+  "ลาวัลย์":{"จันทร์":[{"subj":"คณิต","grade":"ป.4"},{"subj":"คณิต","grade":"ป.5"},null,null,null,null],"อังคาร":[{"subj":"คณิต","grade":"ป.5"},{"subj":"คณิต","grade":"ป.4"},null,null,null,null],"พุธ":[{"subj":"คณิต","grade":"ป.5"},null,{"subj":"คณิต","grade":"ป.4"},null,null,null],"พฤหัสบดี":[null,{"subj":"คณิต","grade":"ป.4"},{"subj":"คณิต","grade":"ป.5"},null,null,null],"ศุกร์":[null,null,null,null,null,null]},
+  "สมภพ":{"จันทร์":[null,{"subj":"คอมพิวเตอร์","grade":"ม.1"},{"subj":"การงานอาชีพ","grade":"ป.6"},null,{"subj":"วิทย์เทคโน","grade":"ม.1"},{"subj":"ลดเวลาเรียน","grade":"ป.3"}],"อังคาร":[{"subj":"วิทย์เทคโน","grade":"ป.4"},null,null,{"subj":"วิทย์เทคโน","grade":"ป.1"},{"subj":"วิทย์เทคโน","grade":"ป.6"},{"subj":"คอมพิวเตอร์เพิ่มเติม","grade":"ม.3"}],"พุธ":[{"subj":"วิทย์เทคโน","grade":"ป.3"},{"subj":"วิทย์เทคโน","grade":"ป.5"},{"subj":"วิทย์เทคโน","grade":"ป.2"},null,{"subj":"คอมพิวเตอร์","grade":"ม.1"},null],"พฤหัสบดี":[{"subj":"การงานอาชีพ","grade":"ป.5"},{"subj":"คอมพิวเตอร์","grade":"ม.2"},{"subj":"วิทย์เทคโน","grade":"ม.3"},{"subj":"วิทย์เทคโน","grade":"ม.2"},null,null],"ศุกร์":[{"subj":"คอมพิวเตอร์","grade":"ม.2"},null,null,{"subj":"คอมพิวเตอร์เพิ่มเติม","grade":"ม.3"},null,null]},
+  "สุณิษา":{"จันทร์":[{"subj":"วิทย์","grade":"ป.2"},null,{"subj":"วิทย์","grade":"ป.3"},{"subj":"วิทย์","grade":"ป.1"},{"subj":"ต้านทุจริต","grade":"ป.5"},{"subj":"วิทย์","grade":"ป.6"}],"อังคาร":[null,null,{"subj":"วิทย์","grade":"ป.1"},{"subj":"วิทย์","grade":"ป.5"},{"subj":"หน้าที่พลเมือง","grade":"ป.5"},{"subj":"วิทย์พลังสิบ","grade":"ป.6"}],"พุธ":[null,null,null,{"subj":"วิทย์","grade":"ป.2"},{"subj":"ต้านทุจริต","grade":"ป.6"},null],"พฤหัสบดี":[{"subj":"วิทย์","grade":"ป.4"},{"subj":"วิทย์","grade":"ป.5"},{"subj":"วิทย์","grade":"ป.3"},null,{"subj":"อังกฤษสื่อสาร","grade":"ป.4"},null],"ศุกร์":[{"subj":"วิทย์","grade":"ป.6"},null,{"subj":"อังกฤษสื่อสาร","grade":"ป.4"},null,{"subj":"วิทย์","grade":"ป.4"},null]},
+  "อนรรฆ":{"จันทร์":[null,null,{"subj":"พละ","grade":"ป.4"},{"subj":"สุขศึกษา","grade":"ป.2"},null,{"subj":"สุขศึกษา","grade":"ม.3"}],"อังคาร":[null,{"subj":"สุขศึกษา","grade":"ม.2"},null,{"subj":"สุขศึกษา","grade":"ป.3"},{"subj":"พละ","grade":"ม.2"},{"subj":"เกษตร","grade":"ป.5"}],"พุธ":[{"subj":"พละ","grade":"ป.6"},{"subj":"สุขศึกษา","grade":"ป.1"},null,{"subj":"สุขศึกษา","grade":"ป.5"},{"subj":"พละ","grade":"ป.5"},null],"พฤหัสบดี":[null,{"subj":"พละ","grade":"ม.3"},null,{"subj":"ต้านทุจริต","grade":"ป.3"},{"subj":"สุขศึกษา","grade":"ม.1"},null],"ศุกร์":[{"subj":"สุขศึกษา","grade":"ป.4"},null,{"subj":"สุขศึกษา","grade":"ป.6"},{"subj":"ต้านทุจริต","grade":"ป.2"},{"subj":"พละ","grade":"ม.1"},null]},
+  "อุบลวรรณ":{"จันทร์":[{"subj":"ไทย","grade":"ป.1"},{"subj":"คณิต","grade":"ป.1"},{"subj":"อังกฤษ","grade":"ป.1"},null,{"subj":"ต้านทุจริต","grade":"ป.1"},{"subj":"ลดเวลาเรียน","grade":"ป.1"}],"อังคาร":[{"subj":"ไทย","grade":"ป.1"},{"subj":"คณิต","grade":"ป.1"},null,null,{"subj":"อังกฤษ","grade":"ป.1"},{"subj":"หน้าที่พลเมือง","grade":"ป.1"}],"พุธ":[{"subj":"ไทย","grade":"ป.1"},null,{"subj":"คณิต","grade":"ป.1"},{"subj":"อังกฤษ","grade":"ป.1"},null,null],"พฤหัสบดี":[{"subj":"ไทย","grade":"ป.1"},null,{"subj":"คณิต","grade":"ป.1"},null,{"subj":"อังกฤษ","grade":"ป.1"},null],"ศุกร์":[{"subj":"ไทย","grade":"ป.1"},{"subj":"คณิต","grade":"ป.1"},{"subj":"อังกฤษ","grade":"ป.1"},{"subj":"งานบ้าน","grade":"ป.1"},null,null]},
+};
+
+const ALL_TEACHERS=Object.keys(TEACHER_DATA).sort();
+
+// เพิ่มคาบพิเศษให้ทุกคน (ครูทุกคนมีร่วมกัน)
+const SHARED_PERIODS = {
+  "พุธ":    { idx: 5, subj: "ชุมนุม",          grade: "ทุกชั้น" },
+  "พฤหัสบดี": { idx: 5, subj: "ลูกเสือ",         grade: "ทุกชั้น" },
+  "ศุกร์":  { idx: 5, subj: "อบรมสุดสัปดาห์", grade: "ทุกชั้น" },
+};
+ALL_TEACHERS.forEach(t => {
+  Object.entries(SHARED_PERIODS).forEach(([day, {idx, subj, grade}]) => {
+    TEACHER_DATA[t][day][idx] = { subj, grade };
+  });
+});
+
+let mode='day', selected='จันทร์';
+
+function parse(raw){const[s,t]=raw.split('|');return{subj:s||'',teacher:t?t.replace(/[()]/g,''):''};}
+function isSpecial(s){return SPECIAL.has(s);}
+
+function periodHeaderRow(){
+  return PERIODS.map(p=>`<th class="th-period th-${p.type}">${p.label}<br><small>${p.time}</small></th>`).join('');
+}
+
+function subjectCell(raw,evenRow){
+  if(!raw)return'<td class="cell-subject'+(evenRow?' even':'')+'" style="background:'+(evenRow?'#f7f9fd':'#fff')+'"></td>';
+  const{subj,teacher}=parse(raw);
+  const sp=isSpecial(subj)?'special':'';
+  const bg=sp?'':(evenRow?'background:#f7f9fd':'background:#fff');
+  return`<td class="cell-subject ${sp}" style="${bg}">
+    <span class="subj">${subj}</span>
+    ${teacher?`<span class="meta">${teacher}</span>`:''}
+  </td>`;
+}
+
+function buildDayView(){
+  let h=`<div class="table-wrap"><table><thead><tr><th class="th-corner">ชั้น</th>${periodHeaderRow()}</tr></thead><tbody>`;
+  GRADES.forEach((g,i)=>{
+    const mid=g.startsWith('ม');
+    const even=i%2===1;
+    h+=`<tr><td class="grade-label${mid?' mid':''}">${g}</td>`;
+    const s=DATA[selected][g];
+    h+=subjectCell(s[0],even)+subjectCell(s[1],even)+subjectCell(s[2],even);
+    h+=`<td class="cell-lunch">🍽<br>พัก</td>`;
+    h+=subjectCell(s[3],even)+subjectCell(s[4],even)+subjectCell(s[5],even);
+    h+='</tr>';
+  });
+  h+='</tbody></table></div>';
+  return h;
+}
+
+function buildGradeView(){
+  let h=`<div class="table-wrap"><table><thead><tr><th class="th-corner">วัน</th>${periodHeaderRow()}</tr></thead><tbody>`;
+  DAYS.forEach((d,i)=>{
+    const even=i%2===1;
+    h+=`<tr><td class="day-label">${d}</td>`;
+    const s=DATA[d][selected];
+    h+=subjectCell(s[0],even)+subjectCell(s[1],even)+subjectCell(s[2],even);
+    h+=`<td class="cell-lunch">🍽<br>พัก</td>`;
+    h+=subjectCell(s[3],even)+subjectCell(s[4],even)+subjectCell(s[5],even);
+    h+='</tr>';
+  });
+  h+='</tbody></table></div>';
+  return h;
+}
+
+function buildTeacherView(){
+  const td=TEACHER_DATA[selected];
+  let totalPeriods=0;
+  const gradeSet=new Set();
+  const subjSet=new Set();
+  DAYS.forEach(d=>{
+    td[d].forEach(p=>{
+      if(p){totalPeriods++;gradeSet.add(p.grade);subjSet.add(p.subj);}
+    });
+  });
+
+  let h=`<div class="teacher-stats">
+    <div class="stat-card"><div class="stat-num">${totalPeriods}</div><div class="stat-label">คาบ/สัปดาห์</div></div>
+    <div class="stat-card"><div class="stat-num">${gradeSet.size}</div><div class="stat-label">ชั้นที่สอน</div></div>
+    <div class="stat-card"><div class="stat-num">${subjSet.size}</div><div class="stat-label">วิชาที่สอน</div></div>
+    <div class="stat-card" style="text-align:left;min-width:160px">
+      <div class="stat-label" style="margin-bottom:5px">ชั้นที่สอน</div>
+      <div style="font-size:12px;color:var(--text);line-height:1.7">${[...gradeSet].join(', ')}</div>
+    </div>
+  </div>`;
+
+  h+=`<div class="table-wrap"><table><thead><tr><th class="th-corner">วัน</th>${periodHeaderRow()}</tr></thead><tbody>`;
+  DAYS.forEach((d,i)=>{
+    const even=i%2===1;
+    const bg=even?'#f7f9fd':'#fff';
+    h+=`<tr><td class="teacher-day-label">${d}</td>`;
+    // periods 0-2 = morning, 3-5 = afternoon (index in TEACHER_DATA)
+    [0,1,2].forEach(pi=>{
+      const p=td[d][pi];
+      if(p){
+        const isMid=p.grade.startsWith('ม');
+        const badgeBg=isMid?'var(--purp-lt)':'var(--blue-lt)';
+        const badgeFg=isMid?'var(--purple)':'var(--navy)';
+        h+=`<td class="cell-subject" style="background:${bg}">
+          <span class="subj">${p.subj}</span>
+          <span class="meta" style="background:${p.grade==='ทุกชั้น'?'var(--purp-lt)':badgeBg};color:${p.grade==='ทุกชั้น'?'var(--purple)':badgeFg};border-radius:4px;padding:1px 5px;font-size:10px;margin-top:3px;display:inline-block">${p.grade}</span>
+        </td>`;
+      }else{
+        h+=`<td class="cell-free" style="background:${bg}">—</td>`;
+      }
+    });
+    h+=`<td class="cell-lunch">🍽<br>พัก</td>`;
+    [3,4,5].forEach(pi=>{
+      const p=td[d][pi];
+      if(p){
+        const isMid=p.grade.startsWith('ม');
+        const badgeBg=isMid?'var(--purp-lt)':'var(--blue-lt)';
+        const badgeFg=isMid?'var(--purple)':'var(--navy)';
+        h+=`<td class="cell-subject" style="background:${bg}">
+          <span class="subj">${p.subj}</span>
+          <span class="meta" style="background:${p.grade==='ทุกชั้น'?'var(--purp-lt)':badgeBg};color:${p.grade==='ทุกชั้น'?'var(--purple)':badgeFg};border-radius:4px;padding:1px 5px;font-size:10px;margin-top:3px;display:inline-block">${p.grade}</span>
+        </td>`;
+      }else{
+        h+=`<td class="cell-free" style="background:${bg}">—</td>`;
+      }
+    });
+    h+='</tr>';
+  });
+  h+='</tbody></table></div>';
+  return h;
+}
+
+function buildFilterBar(){
+  const items=mode==='day'?DAYS:mode==='grade'?GRADES:ALL_TEACHERS;
+  const label=mode==='day'?'วัน :':mode==='grade'?'ชั้น :':'ครู :';
+  let h=`<span class="filter-label">${label}</span>`;
+  items.forEach(item=>{
+    h+=`<button class="chip${item===selected?' active':''}" onclick="selectItem('${item}')">${item}</button>`;
+  });
+  document.getElementById('filter-bar').innerHTML=h;
+}
+
+function buildLegend(){
+  const base=`<div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--blue-lt);border:1px solid #b5d4f4"></div>ช่วงเช้า</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--amber-lt);border:1px solid #f9cb75"></div>พักกลางวัน</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--org-lt);border:1px solid #f9c28a"></div>ช่วงบ่าย</div>`;
+  if(mode!=='teacher'){
+    return base+`<div class="legend-item"><div class="legend-dot" style="background:var(--purp-lt);border:1px solid #c9b8ef"></div>กิจกรรมพิเศษ</div></div>`;
+  }
+  return base+`<div class="legend-item"><div class="legend-dot" style="background:var(--blue-lt);border:1px solid #b5d4f4"></div>ป. (ประถม)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--purp-lt);border:1px solid #c9b8ef"></div>ม. (มัธยม)</div></div>`;
+}
+
+function render(){
+  const content=mode==='day'?buildDayView():mode==='grade'?buildGradeView():buildTeacherView();
+  document.getElementById('main-content').innerHTML=buildLegend()+content;
+  buildFilterBar();
+}
+
+function setMode(m){
+  mode=m;
+  selected=m==='day'?'จันทร์':m==='grade'?'ป.1':ALL_TEACHERS[0];
+  document.querySelectorAll('.mode-tab').forEach((el,i)=>{
+    el.classList.toggle('active',(i===0&&m==='day')||(i===1&&m==='grade')||(i===2&&m==='teacher'));
+  });
+  render();
+}
+
+function selectItem(item){selected=item;render();}
+render();
+</script>
+</body>
+</html>
