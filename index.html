@@ -7,20 +7,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy:#1a3a6b; --blue:#2e6db4; --blue-lt:#d9e8f7; --blue-md:#4a90d9;
-  --purple:#5c3d99; --purp-lt:#eee8f8; --purp-md:#8060bb;
-  --amber:#7d5700; --amber-lt:#fff9e6;
-  --orange:#7d4000; --org-lt:#ffe8cc;
-  --teal:#0f5c52; --teal-lt:#e0f4f1;
-  --green:#2e7d32; --grn-lt:#e8f5e9;
-  --red:#c62828;
-  --bg:#f4f6fb; --surface:#fff; --border:#dde3ee;
-  --text:#1a2233; --muted:#6b7a99;
+  --navy:#1a3a6b;--blue:#2e6db4;--blue-lt:#d9e8f7;--blue-md:#4a90d9;
+  --purple:#5c3d99;--purp-lt:#eee8f8;--purp-md:#8060bb;
+  --amber:#7d5700;--amber-lt:#fff9e6;
+  --orange:#7d4000;--org-lt:#ffe8cc;
+  --teal:#0f5c52;
+  --bg:#f4f6fb;--surface:#fff;--border:#dde3ee;
+  --text:#1a2233;--muted:#6b7a99;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-
-/* HEADER */
 header{background:var(--navy);color:#fff;padding:18px 28px 0;position:sticky;top:0;z-index:100;box-shadow:0 2px 14px rgba(26,58,107,.22);}
 .header-top{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
 .school-icon{width:40px;height:40px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;}
@@ -30,37 +26,27 @@ header{background:var(--navy);color:#fff;padding:18px 28px 0;position:sticky;top
 .mode-tab{padding:8px 22px;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;border:none;background:rgba(255,255,255,.08);color:rgba(255,255,255,.65);border-radius:8px 8px 0 0;transition:all .18s;}
 .mode-tab.active{background:var(--bg);color:var(--navy);}
 .mode-tab:hover:not(.active){background:rgba(255,255,255,.16);color:#fff;}
-
-/* FILTER BAR */
 .filter-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:11px 28px;display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
 .filter-label{font-size:12px;color:var(--muted);font-weight:500;margin-right:2px;white-space:nowrap;}
 .chip{padding:5px 13px;border-radius:20px;border:1.5px solid var(--border);background:transparent;font-size:12.5px;font-family:inherit;font-weight:500;color:var(--text);cursor:pointer;transition:all .14s;white-space:nowrap;}
 .chip:hover{border-color:var(--blue);color:var(--blue);}
 .chip.active{background:var(--navy);border-color:var(--navy);color:#fff;}
-
-/* MAIN */
 main{padding:20px 28px;}
 .legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;align-items:center;}
 .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);}
 .legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
-
-/* TABLE */
 .table-wrap{background:var(--surface);border-radius:12px;border:1px solid var(--border);overflow-x:auto;box-shadow:0 2px 8px rgba(26,58,107,.06);}
 table{width:100%;border-collapse:collapse;min-width:700px;}
 th,td{padding:0;border:1px solid var(--border);text-align:center;vertical-align:middle;}
-.th-corner,.th-grade,.th-day,.th-teacher-hdr{background:var(--navy);color:#fff;font-size:13px;font-weight:600;padding:10px 14px;white-space:nowrap;}
+.th-corner,.th-grade,.th-day{background:var(--navy);color:#fff;font-size:13px;font-weight:600;padding:10px 14px;white-space:nowrap;}
 .th-period{font-size:11.5px;font-weight:600;padding:7px 5px;line-height:1.4;}
 .th-morning{background:var(--blue-lt);color:var(--navy);}
 .th-lunch{background:var(--amber-lt);color:var(--amber);}
 .th-afternoon{background:var(--org-lt);color:var(--orange);}
-
-/* row label cells */
 td.grade-label{background:var(--blue-md);color:#fff;font-weight:600;font-size:13px;padding:0 10px;white-space:nowrap;}
 td.grade-label.mid{background:var(--purple);}
 td.day-label{background:var(--blue);color:#fff;font-weight:600;font-size:13px;padding:8px 12px;white-space:nowrap;}
 td.teacher-day-label{background:var(--teal);color:#fff;font-weight:600;font-size:13px;padding:8px 12px;white-space:nowrap;}
-
-/* subject cells */
 .cell-subject{padding:7px 5px;font-size:12px;line-height:1.3;}
 tr:nth-child(even) .cell-subject{background:#f7f9fd;}
 .cell-subject .subj{font-weight:600;font-size:12px;display:block;}
@@ -70,14 +56,46 @@ tr:nth-child(even) .cell-subject{background:#f7f9fd;}
 .cell-subject.special .meta{color:var(--purp-md);}
 .cell-lunch{background:var(--amber-lt);color:var(--amber);font-size:11px;font-weight:500;padding:7px 4px;font-style:italic;}
 .cell-free{background:#f9fafc;color:#c0c8d8;font-size:11px;padding:7px 4px;}
-
-/* TEACHER STATS */
 .teacher-stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 18px;min-width:120px;text-align:center;}
 .stat-num{font-size:22px;font-weight:600;color:var(--navy);}
 .stat-label{font-size:11.5px;color:var(--muted);margin-top:2px;}
-
-@media(max-width:600px){header{padding:14px 16px 0;}main{padding:14px 16px;}.filter-bar{padding:10px 16px;}}
+/* SUB MODE */
+.sub-top{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.sub-label{font-size:12px;font-weight:500;color:var(--muted);margin-bottom:5px;}
+.sub-select{width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text);cursor:pointer;}
+.sub-select:focus{outline:none;border-color:var(--blue);}
+.sub-section-title{font-size:12px;font-weight:500;color:var(--muted);margin:18px 0 8px;letter-spacing:.5px;}
+.sub-original{background:#fff8e1;border:1px solid #f9c94e;border-radius:10px;padding:12px 16px;margin-bottom:10px;}
+.sub-original-hdr{font-size:12px;font-weight:600;color:#7d5700;margin-bottom:6px;}
+.sub-orig-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);padding:3px 0;}
+.sub-orig-badge{background:var(--navy);color:#fff;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:500;}
+.avail-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+.avail-card{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:border-color .15s,background .15s;}
+.avail-card:hover{border-color:var(--blue);}
+.avail-card.picked{border-color:var(--blue);background:#f0f5ff;}
+.avail-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px;flex-shrink:0;}
+.avail-name{font-size:13px;font-weight:600;color:var(--text);}
+.avail-stat{font-size:11.5px;color:var(--muted);margin-top:1px;}
+.avail-periods{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+.pb{font-size:10.5px;padding:2px 7px;border-radius:4px;white-space:nowrap;}
+.pb-busy{background:#fee2e2;color:#991b1b;}
+.pb-free{background:#dcfce7;color:#166534;}
+.no-free{background:#f3f4f6;color:var(--muted);border-radius:10px;padding:14px 16px;font-size:13px;text-align:center;margin-bottom:10px;}
+.confirm-bar{background:var(--navy);color:#fff;border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;margin-bottom:6px;}
+.confirm-info{font-size:13px;line-height:1.5;}
+.confirm-btn{background:#fff;color:var(--navy);border:none;border-radius:7px;padding:7px 16px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;}
+.confirm-btn:hover{background:#e8f0fb;}
+.sub-period-block{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+.sub-period-block:last-of-type{border-bottom:none;}
+.log-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+.log-table th{background:var(--navy);color:#fff;padding:8px 10px;text-align:left;font-weight:500;}
+.log-table td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top;}
+.log-table tr:last-child td{border-bottom:none;}
+.log-empty{color:var(--muted);font-size:13px;text-align:center;padding:14px;}
+.del-btn{background:none;border:none;color:#dc2626;cursor:pointer;font-size:12px;padding:2px 6px;border-radius:4px;}
+.del-btn:hover{background:#fee2e2;}
+@media(max-width:600px){header{padding:14px 16px 0;}main{padding:14px 16px;}.filter-bar{padding:10px 16px;}.sub-top{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -93,6 +111,7 @@ tr:nth-child(even) .cell-subject{background:#f7f9fd;}
     <button class="mode-tab active" onclick="setMode('day')">รายวัน</button>
     <button class="mode-tab" onclick="setMode('grade')">รายชั้น</button>
     <button class="mode-tab" onclick="setMode('teacher')">รายครู</button>
+    <button class="mode-tab" onclick="setMode('sub')">หาครูสอนแทน</button>
   </div>
 </header>
 <div class="filter-bar" id="filter-bar"></div>
@@ -101,7 +120,6 @@ tr:nth-child(even) .cell-subject{background:#f7f9fd;}
 <script>
 const DAYS=["จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์"];
 const GRADES=["ป.1","ป.2","ป.3","ป.4","ป.5","ป.6","ม.1","ม.2","ม.3"];
-const TEACHERS=["กวัญเนตร","ขวัญฤทัย","ขวัญเนตร","ฐิติมา","ณัฐวุฒิ","ธนพล","ธิดาวรรณ","ธีรพัฒน์","ประสิทธิ์","พรชนก","พิจิตรา","ลาวัลย์","สมภพ","สุณิษา","อนรรฆ","อุบลวรรณ"];
 const PERIODS=[
   {label:"คาบ 1",time:"08.30–09.30",type:"morning"},
   {label:"คาบ 2",time:"09.30–10.30",type:"morning"},
@@ -111,6 +129,7 @@ const PERIODS=[
   {label:"คาบ 5",time:"13.30–14.30",type:"afternoon"},
   {label:"คาบ 6",time:"14.30–15.30",type:"afternoon"},
 ];
+const PERIOD_SHORT=["คาบ 1","คาบ 2","คาบ 3","คาบ 4","คาบ 5","คาบ 6"];
 const SPECIAL=new Set(["ชุมนุม","ลูกเสือ","อบรมสุดสัปดาห์","ลดเวลาเรียน"]);
 
 const DATA={
@@ -139,166 +158,258 @@ const TEACHER_DATA={
   "อุบลวรรณ":{"จันทร์":[{"subj":"ไทย","grade":"ป.1"},{"subj":"คณิต","grade":"ป.1"},{"subj":"อังกฤษ","grade":"ป.1"},null,{"subj":"ต้านทุจริต","grade":"ป.1"},{"subj":"ลดเวลาเรียน","grade":"ป.1"}],"อังคาร":[{"subj":"ไทย","grade":"ป.1"},{"subj":"คณิต","grade":"ป.1"},null,null,{"subj":"อังกฤษ","grade":"ป.1"},{"subj":"หน้าที่พลเมือง","grade":"ป.1"}],"พุธ":[{"subj":"ไทย","grade":"ป.1"},null,{"subj":"คณิต","grade":"ป.1"},{"subj":"อังกฤษ","grade":"ป.1"},null,null],"พฤหัสบดี":[{"subj":"ไทย","grade":"ป.1"},null,{"subj":"คณิต","grade":"ป.1"},null,{"subj":"อังกฤษ","grade":"ป.1"},null],"ศุกร์":[{"subj":"ไทย","grade":"ป.1"},{"subj":"คณิต","grade":"ป.1"},{"subj":"อังกฤษ","grade":"ป.1"},{"subj":"งานบ้าน","grade":"ป.1"},null,null]},
 };
 
+// เพิ่มคาบพิเศษให้ทุกคน
 const ALL_TEACHERS=Object.keys(TEACHER_DATA).sort();
-
-// เพิ่มคาบพิเศษให้ทุกคน (ครูทุกคนมีร่วมกัน)
-const SHARED_PERIODS = {
-  "พุธ":    { idx: 5, subj: "ชุมนุม",          grade: "ทุกชั้น" },
-  "พฤหัสบดี": { idx: 5, subj: "ลูกเสือ",         grade: "ทุกชั้น" },
-  "ศุกร์":  { idx: 5, subj: "อบรมสุดสัปดาห์", grade: "ทุกชั้น" },
-};
-ALL_TEACHERS.forEach(t => {
-  Object.entries(SHARED_PERIODS).forEach(([day, {idx, subj, grade}]) => {
-    TEACHER_DATA[t][day][idx] = { subj, grade };
-  });
+ALL_TEACHERS.forEach(function(t){
+  TEACHER_DATA[t]["พุธ"][5]={subj:"ชุมนุม",grade:"ทุกชั้น"};
+  TEACHER_DATA[t]["พฤหัสบดี"][5]={subj:"ลูกเสือ",grade:"ทุกชั้น"};
+  TEACHER_DATA[t]["ศุกร์"][5]={subj:"อบรมสุดสัปดาห์",grade:"ทุกชั้น"};
 });
 
 let mode='day', selected='จันทร์';
 
-function parse(raw){const[s,t]=raw.split('|');return{subj:s||'',teacher:t?t.replace(/[()]/g,''):''};}
+function parse(raw){
+  var parts=raw.split('|');
+  return {subj:parts[0]||'',teacher:parts[1]?parts[1].replace(/[()]/g,''):''};
+}
 function isSpecial(s){return SPECIAL.has(s);}
 
 function periodHeaderRow(){
-  return PERIODS.map(p=>`<th class="th-period th-${p.type}">${p.label}<br><small>${p.time}</small></th>`).join('');
+  return PERIODS.map(function(p){
+    return '<th class="th-period th-'+p.type+'">'+p.label+'<br><small>'+p.time+'</small></th>';
+  }).join('');
 }
 
-function subjectCell(raw,evenRow){
-  if(!raw)return'<td class="cell-subject'+(evenRow?' even':'')+'" style="background:'+(evenRow?'#f7f9fd':'#fff')+'"></td>';
-  const{subj,teacher}=parse(raw);
-  const sp=isSpecial(subj)?'special':'';
-  const bg=sp?'':(evenRow?'background:#f7f9fd':'background:#fff');
-  return`<td class="cell-subject ${sp}" style="${bg}">
-    <span class="subj">${subj}</span>
-    ${teacher?`<span class="meta">${teacher}</span>`:''}
-  </td>`;
+function subjectCell(raw,even){
+  if(!raw) return '<td class="cell-subject" style="background:'+(even?'#f7f9fd':'#fff')+'"></td>';
+  var p=parse(raw);
+  var sp=isSpecial(p.subj)?'special':'';
+  var bg=sp?'':(even?'background:#f7f9fd':'background:#fff');
+  return '<td class="cell-subject '+sp+'" style="'+bg+'"><span class="subj">'+p.subj+'</span>'+(p.teacher?'<span class="meta">'+p.teacher+'</span>':'')+'</td>';
 }
 
 function buildDayView(){
-  let h=`<div class="table-wrap"><table><thead><tr><th class="th-corner">ชั้น</th>${periodHeaderRow()}</tr></thead><tbody>`;
-  GRADES.forEach((g,i)=>{
-    const mid=g.startsWith('ม');
-    const even=i%2===1;
-    h+=`<tr><td class="grade-label${mid?' mid':''}">${g}</td>`;
-    const s=DATA[selected][g];
+  var h='<div class="table-wrap"><table><thead><tr><th class="th-corner">ชั้น</th>'+periodHeaderRow()+'</tr></thead><tbody>';
+  GRADES.forEach(function(g,i){
+    var mid=g.startsWith('ม');
+    var even=i%2===1;
+    h+='<tr><td class="grade-label'+(mid?' mid':'')+'">'+g+'</td>';
+    var s=DATA[selected][g];
     h+=subjectCell(s[0],even)+subjectCell(s[1],even)+subjectCell(s[2],even);
-    h+=`<td class="cell-lunch">🍽<br>พัก</td>`;
+    h+='<td class="cell-lunch">🍽<br>พัก</td>';
     h+=subjectCell(s[3],even)+subjectCell(s[4],even)+subjectCell(s[5],even);
     h+='</tr>';
   });
-  h+='</tbody></table></div>';
-  return h;
+  return h+'</tbody></table></div>';
 }
 
 function buildGradeView(){
-  let h=`<div class="table-wrap"><table><thead><tr><th class="th-corner">วัน</th>${periodHeaderRow()}</tr></thead><tbody>`;
-  DAYS.forEach((d,i)=>{
-    const even=i%2===1;
-    h+=`<tr><td class="day-label">${d}</td>`;
-    const s=DATA[d][selected];
+  var h='<div class="table-wrap"><table><thead><tr><th class="th-corner">วัน</th>'+periodHeaderRow()+'</tr></thead><tbody>';
+  DAYS.forEach(function(d,i){
+    var even=i%2===1;
+    h+='<tr><td class="day-label">'+d+'</td>';
+    var s=DATA[d][selected];
     h+=subjectCell(s[0],even)+subjectCell(s[1],even)+subjectCell(s[2],even);
-    h+=`<td class="cell-lunch">🍽<br>พัก</td>`;
+    h+='<td class="cell-lunch">🍽<br>พัก</td>';
     h+=subjectCell(s[3],even)+subjectCell(s[4],even)+subjectCell(s[5],even);
     h+='</tr>';
   });
-  h+='</tbody></table></div>';
-  return h;
+  return h+'</tbody></table></div>';
 }
 
 function buildTeacherView(){
-  const td=TEACHER_DATA[selected];
-  let totalPeriods=0;
-  const gradeSet=new Set();
-  const subjSet=new Set();
-  DAYS.forEach(d=>{
-    td[d].forEach(p=>{
-      if(p){totalPeriods++;gradeSet.add(p.grade);subjSet.add(p.subj);}
-    });
-  });
-
-  let h=`<div class="teacher-stats">
-    <div class="stat-card"><div class="stat-num">${totalPeriods}</div><div class="stat-label">คาบ/สัปดาห์</div></div>
-    <div class="stat-card"><div class="stat-num">${gradeSet.size}</div><div class="stat-label">ชั้นที่สอน</div></div>
-    <div class="stat-card"><div class="stat-num">${subjSet.size}</div><div class="stat-label">วิชาที่สอน</div></div>
-    <div class="stat-card" style="text-align:left;min-width:160px">
-      <div class="stat-label" style="margin-bottom:5px">ชั้นที่สอน</div>
-      <div style="font-size:12px;color:var(--text);line-height:1.7">${[...gradeSet].join(', ')}</div>
-    </div>
-  </div>`;
-
-  h+=`<div class="table-wrap"><table><thead><tr><th class="th-corner">วัน</th>${periodHeaderRow()}</tr></thead><tbody>`;
-  DAYS.forEach((d,i)=>{
-    const even=i%2===1;
-    const bg=even?'#f7f9fd':'#fff';
-    h+=`<tr><td class="teacher-day-label">${d}</td>`;
-    // periods 0-2 = morning, 3-5 = afternoon (index in TEACHER_DATA)
-    [0,1,2].forEach(pi=>{
-      const p=td[d][pi];
+  var td=TEACHER_DATA[selected];
+  var total=0,gradeSet=new Set(),subjSet=new Set();
+  DAYS.forEach(function(d){td[d].forEach(function(p){if(p){total++;gradeSet.add(p.grade);subjSet.add(p.subj);}});});
+  var h='<div class="teacher-stats">'
+    +'<div class="stat-card"><div class="stat-num">'+total+'</div><div class="stat-label">คาบ/สัปดาห์</div></div>'
+    +'<div class="stat-card"><div class="stat-num">'+gradeSet.size+'</div><div class="stat-label">ชั้นที่สอน</div></div>'
+    +'<div class="stat-card"><div class="stat-num">'+subjSet.size+'</div><div class="stat-label">วิชาที่สอน</div></div>'
+    +'<div class="stat-card" style="text-align:left;min-width:160px"><div class="stat-label" style="margin-bottom:5px">ชั้นที่สอน</div><div style="font-size:12px;line-height:1.7">'+[...gradeSet].join(', ')+'</div></div>'
+    +'</div>';
+  h+='<div class="table-wrap"><table><thead><tr><th class="th-corner">วัน</th>'+periodHeaderRow()+'</tr></thead><tbody>';
+  DAYS.forEach(function(d,i){
+    var bg=i%2===1?'#f7f9fd':'#fff';
+    h+='<tr><td class="teacher-day-label">'+d+'</td>';
+    [0,1,2].forEach(function(pi){
+      var p=td[d][pi];
       if(p){
-        const isMid=p.grade.startsWith('ม');
-        const badgeBg=isMid?'var(--purp-lt)':'var(--blue-lt)';
-        const badgeFg=isMid?'var(--purple)':'var(--navy)';
-        h+=`<td class="cell-subject" style="background:${bg}">
-          <span class="subj">${p.subj}</span>
-          <span class="meta" style="background:${p.grade==='ทุกชั้น'?'var(--purp-lt)':badgeBg};color:${p.grade==='ทุกชั้น'?'var(--purple)':badgeFg};border-radius:4px;padding:1px 5px;font-size:10px;margin-top:3px;display:inline-block">${p.grade}</span>
-        </td>`;
-      }else{
-        h+=`<td class="cell-free" style="background:${bg}">—</td>`;
+        var isMid=p.grade.startsWith('ม')||p.grade==='ทุกชั้น';
+        var badgeBg=isMid?'var(--purp-lt)':'var(--blue-lt)';
+        var badgeFg=isMid?'var(--purple)':'var(--navy)';
+        h+='<td class="cell-subject" style="background:'+bg+'"><span class="subj">'+p.subj+'</span><span class="meta" style="background:'+badgeBg+';color:'+badgeFg+';border-radius:4px;padding:1px 5px;font-size:10px;margin-top:3px;display:inline-block">'+p.grade+'</span></td>';
+      } else {
+        h+='<td class="cell-free" style="background:'+bg+'">—</td>';
       }
     });
-    h+=`<td class="cell-lunch">🍽<br>พัก</td>`;
-    [3,4,5].forEach(pi=>{
-      const p=td[d][pi];
+    h+='<td class="cell-lunch">🍽<br>พัก</td>';
+    [3,4,5].forEach(function(pi){
+      var p=td[d][pi];
       if(p){
-        const isMid=p.grade.startsWith('ม');
-        const badgeBg=isMid?'var(--purp-lt)':'var(--blue-lt)';
-        const badgeFg=isMid?'var(--purple)':'var(--navy)';
-        h+=`<td class="cell-subject" style="background:${bg}">
-          <span class="subj">${p.subj}</span>
-          <span class="meta" style="background:${p.grade==='ทุกชั้น'?'var(--purp-lt)':badgeBg};color:${p.grade==='ทุกชั้น'?'var(--purple)':badgeFg};border-radius:4px;padding:1px 5px;font-size:10px;margin-top:3px;display:inline-block">${p.grade}</span>
-        </td>`;
-      }else{
-        h+=`<td class="cell-free" style="background:${bg}">—</td>`;
+        var isMid=p.grade.startsWith('ม')||p.grade==='ทุกชั้น';
+        var badgeBg=isMid?'var(--purp-lt)':'var(--blue-lt)';
+        var badgeFg=isMid?'var(--purple)':'var(--navy)';
+        h+='<td class="cell-subject" style="background:'+bg+'"><span class="subj">'+p.subj+'</span><span class="meta" style="background:'+badgeBg+';color:'+badgeFg+';border-radius:4px;padding:1px 5px;font-size:10px;margin-top:3px;display:inline-block">'+p.grade+'</span></td>';
+      } else {
+        h+='<td class="cell-free" style="background:'+bg+'">—</td>';
       }
     });
     h+='</tr>';
   });
-  h+='</tbody></table></div>';
-  return h;
+  return h+'</tbody></table></div>';
 }
 
-function buildFilterBar(){
-  const items=mode==='day'?DAYS:mode==='grade'?GRADES:ALL_TEACHERS;
-  const label=mode==='day'?'วัน :':mode==='grade'?'ชั้น :':'ครู :';
-  let h=`<span class="filter-label">${label}</span>`;
-  items.forEach(item=>{
-    h+=`<button class="chip${item===selected?' active':''}" onclick="selectItem('${item}')">${item}</button>`;
+// ===== SUB MODE =====
+var subLog=JSON.parse(localStorage.getItem('subLog')||'[]');
+var subDay='จันทร์', subAbsentTeacher=ALL_TEACHERS[0], subPickedMap={};
+
+function getAbsentPeriods(teacher,day){
+  return TEACHER_DATA[teacher][day].map(function(s,i){return {idx:i,data:s};}).filter(function(x){return x.data;});
+}
+function getFreeTeachers(day,periodIdx,exclude){
+  return ALL_TEACHERS.filter(function(t){
+    if(t===exclude) return false;
+    return !TEACHER_DATA[t][day][periodIdx];
   });
-  document.getElementById('filter-bar').innerHTML=h;
+}
+function avatarCol(name){
+  var c=[{bg:'#dbeafe',fg:'#1e40af'},{bg:'#dcfce7',fg:'#166534'},{bg:'#fce7f3',fg:'#9d174d'},{bg:'#fef3c7',fg:'#92400e'},{bg:'#ede9fe',fg:'#5b21b6'},{bg:'#fee2e2',fg:'#991b1b'},{bg:'#e0f2fe',fg:'#075985'},{bg:'#d1fae5',fg:'#065f46'},{bg:'#fef9c3',fg:'#713f12'},{bg:'#f3e8ff',fg:'#6b21a8'}];
+  return c[name.charCodeAt(0)%c.length];
 }
 
-function buildLegend(){
-  const base=`<div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:var(--blue-lt);border:1px solid #b5d4f4"></div>ช่วงเช้า</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--amber-lt);border:1px solid #f9cb75"></div>พักกลางวัน</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--org-lt);border:1px solid #f9c28a"></div>ช่วงบ่าย</div>`;
-  if(mode!=='teacher'){
-    return base+`<div class="legend-item"><div class="legend-dot" style="background:var(--purp-lt);border:1px solid #c9b8ef"></div>กิจกรรมพิเศษ</div></div>`;
+function buildSubView(){
+  return '<div>'
+    +'<div class="sub-top">'
+    +'<div><div class="sub-label">วันที่ไม่ว่าง</div>'
+    +'<select class="sub-select" id="sub-day" onchange="subDay=this.value;subPickedMap={};renderSubBody()">'
+    +DAYS.map(function(d){return '<option value="'+d+'"'+(d===subDay?' selected':'')+'>'+d+'</option>';}).join('')
+    +'</select></div>'
+    +'<div><div class="sub-label">ครูที่ไม่ว่าง / ลา</div>'
+    +'<select class="sub-select" id="sub-teacher" onchange="subAbsentTeacher=this.value;subPickedMap={};renderSubBody()">'
+    +ALL_TEACHERS.map(function(t){return '<option value="'+t+'"'+(t===subAbsentTeacher?' selected':'')+'>ครู'+t+'</option>';}).join('')
+    +'</select></div>'
+    +'</div>'
+    +'<div id="sub-body"></div>'
+    +'</div>';
+}
+
+function renderSubBody(){
+  var bodyEl=document.getElementById('sub-body');
+  if(!bodyEl) return;
+  subDay=document.getElementById('sub-day').value;
+  subAbsentTeacher=document.getElementById('sub-teacher').value;
+  var absentPeriods=getAbsentPeriods(subAbsentTeacher,subDay);
+  var h='';
+  if(absentPeriods.length===0){
+    h='<div class="no-free">ครู'+subAbsentTeacher+' ไม่มีคาบสอนวัน'+subDay+' ไม่ต้องหาครูสอนแทน</div>';
+    bodyEl.innerHTML=h+renderLogHTML();
+    return;
   }
-  return base+`<div class="legend-item"><div class="legend-dot" style="background:var(--blue-lt);border:1px solid #b5d4f4"></div>ป. (ประถม)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--purp-lt);border:1px solid #c9b8ef"></div>ม. (มัธยม)</div></div>`;
+  absentPeriods.forEach(function(item){
+    var idx=item.idx; var data=item.data;
+    var freeList=getFreeTeachers(subDay,idx,subAbsentTeacher);
+    var picked=subPickedMap[idx]||null;
+    h+='<div class="sub-period-block">';
+    h+='<div class="sub-original"><div class="sub-original-hdr">📋 '+PERIOD_SHORT[idx]+' — ต้องหาครูสอนแทน</div>';
+    h+='<div class="sub-orig-row"><span class="sub-orig-badge">'+data.grade+'</span> <span style="font-size:13px;font-weight:500">'+data.subj+'</span> <span style="font-size:12px;color:var(--amber)">( ครู'+subAbsentTeacher+' )</span></div></div>';
+    if(freeList.length===0){
+      h+='<div class="no-free">ครูทุกคนมีคาบใน'+PERIOD_SHORT[idx]+' ไม่มีครูว่าง</div>';
+    } else {
+      h+='<div class="sub-label" style="margin-bottom:6px">ครูที่ว่าง '+freeList.length+' คน — กดเลือกเพื่อจัดสอนแทน</div><div class="avail-list">';
+      freeList.forEach(function(t){
+        var col=avatarCol(t);
+        var isPicked=picked===t;
+        var dayLoad=TEACHER_DATA[t][subDay].map(function(s,i){return {i:i,s:s};});
+        var busyCount=dayLoad.filter(function(x){return x.s;}).length;
+        h+='<div class="avail-card'+(isPicked?' picked':'')+'" onclick="togglePick('+idx+',\''+t+'\')">';
+        h+='<div class="avail-avatar" style="background:'+col.bg+';color:'+col.fg+'">'+t[0]+'</div>';
+        h+='<div style="flex:1"><div class="avail-name">ครู'+t+(isPicked?' ✓':'')+'</div>';
+        h+='<div class="avail-stat">สอน '+busyCount+' คาบในวัน'+subDay+'</div>';
+        h+='<div class="avail-periods">';
+        dayLoad.forEach(function(x){
+          if(x.i===idx) return;
+          h+=x.s?'<span class="pb pb-busy">'+PERIOD_SHORT[x.i]+': '+x.s.subj+'</span>':'<span class="pb pb-free">'+PERIOD_SHORT[x.i]+': ว่าง</span>';
+        });
+        h+='</div></div></div>';
+      });
+      h+='</div>';
+      if(picked){
+        h+='<div class="confirm-bar"><div class="confirm-info">จัด <strong>ครู'+picked+'</strong> สอนแทน '+subDay+' '+PERIOD_SHORT[idx]+'<br><span style="opacity:.7;font-size:12px">'+data.grade+' — '+data.subj+'</span></div><button class="confirm-btn" onclick="confirmSub('+idx+')">บันทึก ✓</button></div>';
+      }
+    }
+    h+='</div>';
+  });
+  h+='<div class="sub-section-title">ประวัติการจัดสอนแทน (เซสชันนี้)</div>';
+  h+=renderLogHTML();
+  bodyEl.innerHTML=h;
 }
 
+function renderLogHTML(){
+  if(subLog.length===0) return '<div class="log-empty">ยังไม่มีการบันทึก</div>';
+  var h='<div class="table-wrap"><table class="log-table"><thead><tr><th>วัน / คาบ</th><th>วิชา / ชั้น</th><th>ครูสอนแทน</th><th></th></tr></thead><tbody>';
+  subLog.forEach(function(e,i){
+    h+='<tr><td>'+e.day+' '+e.periodLabel+'</td><td style="color:var(--muted);font-size:11.5px">'+e.original+'</td><td><strong>ครู'+e.substitute+'</strong></td><td><button class="del-btn" onclick="deleteSub('+i+')">ลบ</button></td></tr>';
+  });
+  return h+'</tbody></table></div>';
+}
+
+function saveLog(){localStorage.setItem('subLog',JSON.stringify(subLog));}
+function togglePick(periodIdx,teacher){
+  if(subPickedMap[periodIdx]===teacher) delete subPickedMap[periodIdx];
+  else subPickedMap[periodIdx]=teacher;
+  renderSubBody();
+}
+function confirmSub(periodIdx){
+  var data=TEACHER_DATA[subAbsentTeacher][subDay][periodIdx];
+  subLog.unshift({day:subDay,periodLabel:PERIOD_SHORT[periodIdx],substitute:subPickedMap[periodIdx],original:data.grade+' — '+data.subj+' (ครู'+subAbsentTeacher+')'});
+  delete subPickedMap[periodIdx];
+  saveLog();
+  renderSubBody();
+}
+function deleteSub(i){subLog.splice(i,1);saveLog();renderSubBody();}
+
+// ===== LEGEND =====
+function buildLegend(){
+  var base='<div class="legend"><div class="legend-item"><div class="legend-dot" style="background:var(--blue-lt);border:1px solid #b5d4f4"></div>ช่วงเช้า</div><div class="legend-item"><div class="legend-dot" style="background:var(--amber-lt);border:1px solid #f9cb75"></div>พักกลางวัน</div><div class="legend-item"><div class="legend-dot" style="background:var(--org-lt);border:1px solid #f9c28a"></div>ช่วงบ่าย</div>';
+  if(mode==='teacher') return base+'<div class="legend-item"><div class="legend-dot" style="background:var(--blue-lt);border:1px solid #b5d4f4"></div>ป.</div><div class="legend-item"><div class="legend-dot" style="background:var(--purp-lt);border:1px solid #c9b8ef"></div>ม.</div></div>';
+  return base+'<div class="legend-item"><div class="legend-dot" style="background:var(--purp-lt);border:1px solid #c9b8ef"></div>กิจกรรมพิเศษ</div></div>';
+}
+
+// ===== FILTER BAR =====
+function buildFilterBar(){
+  var fb=document.getElementById('filter-bar');
+  if(mode==='sub'){fb.innerHTML='';fb.style.display='none';return;}
+  fb.style.display='flex';
+  var items=mode==='day'?DAYS:mode==='grade'?GRADES:ALL_TEACHERS;
+  var label=mode==='day'?'วัน :':mode==='grade'?'ชั้น :':'ครู :';
+  var h='<span class="filter-label">'+label+'</span>';
+  items.forEach(function(item){
+    h+='<button class="chip'+(item===selected?' active':'')+'" onclick="selectItem(\''+item+'\')">'+item+'</button>';
+  });
+  fb.innerHTML=h;
+}
+
+// ===== RENDER =====
 function render(){
-  const content=mode==='day'?buildDayView():mode==='grade'?buildGradeView():buildTeacherView();
-  document.getElementById('main-content').innerHTML=buildLegend()+content;
+  var content;
+  if(mode==='day') content=buildDayView();
+  else if(mode==='grade') content=buildGradeView();
+  else if(mode==='teacher') content=buildTeacherView();
+  else content=buildSubView();
+  var mc=document.getElementById('main-content');
+  mc.innerHTML=(mode==='sub'?'':buildLegend())+content;
+  if(mode==='sub') renderSubBody();
   buildFilterBar();
 }
 
 function setMode(m){
   mode=m;
-  selected=m==='day'?'จันทร์':m==='grade'?'ป.1':ALL_TEACHERS[0];
-  document.querySelectorAll('.mode-tab').forEach((el,i)=>{
-    el.classList.toggle('active',(i===0&&m==='day')||(i===1&&m==='grade')||(i===2&&m==='teacher'));
+  if(m==='day') selected='จันทร์';
+  else if(m==='grade') selected='ป.1';
+  else if(m==='teacher') selected=ALL_TEACHERS[0];
+  else selected='';
+  document.querySelectorAll('.mode-tab').forEach(function(el,i){
+    el.classList.toggle('active',(i===0&&m==='day')||(i===1&&m==='grade')||(i===2&&m==='teacher')||(i===3&&m==='sub'));
   });
   render();
 }
