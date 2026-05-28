@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ตารางสอน 2569 — โรงเรียนดอนสีนวนฯ</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
 :root{
   --navy:#1a3a6b;--blue:#2e6db4;--blue-lt:#d9e8f7;--blue-md:#4a90d9;
@@ -60,15 +61,44 @@ tr:nth-child(even) .cell-subject{background:#f7f9fd;}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 18px;min-width:120px;text-align:center;}
 .stat-num{font-size:22px;font-weight:600;color:var(--navy);}
 .stat-label{font-size:11.5px;color:var(--muted);margin-top:2px;}
-/* SUB MODE */
 .sub-top{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
 .sub-label{font-size:12px;font-weight:500;color:var(--muted);margin-bottom:5px;}
 .sub-select{width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text);cursor:pointer;}
 .sub-select:focus{outline:none;border-color:var(--blue);}
+.sub-date-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;}
+.sub-date-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.sub-date{padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text);}
+.sub-date:focus{outline:none;border-color:var(--blue);}
+.sub-date-weekday{font-size:12px;color:var(--muted);margin-top:6px;}
+.sub-summary{margin-top:18px;}
+.sub-summary-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px;}
+.sub-summary-title{font-size:13px;font-weight:600;color:var(--navy);}
+.summary-toolbar{display:flex;gap:8px;flex-wrap:wrap;}
+.export-btn{border:1.5px solid var(--border);background:var(--surface);color:var(--text);border-radius:8px;padding:8px 12px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;}
+.export-btn:hover{border-color:var(--blue);color:var(--blue);}
+.export-btn:disabled{opacity:.5;cursor:not-allowed;}
+.summary-group{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px;box-shadow:0 1px 6px rgba(26,58,107,.04);}
+.summary-group-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:10px;}
+.summary-group-date{font-size:14px;font-weight:600;color:var(--text);}
+.summary-group-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+.summary-badges{display:flex;gap:6px;flex-wrap:wrap;}
+.summary-pill{font-size:11px;padding:3px 8px;border-radius:999px;background:#f3f4f6;color:var(--muted);}
+.summary-pill.primary{background:var(--blue-lt);color:var(--navy);}
+.summary-item{display:grid;grid-template-columns:110px 1fr auto auto;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px dashed var(--border);}
+.summary-item:first-of-type{border-top:none;padding-top:0;}
+.summary-time{font-size:12px;font-weight:600;color:var(--navy);}
+.summary-main{font-size:13px;color:var(--text);line-height:1.45;}
+.summary-meta{font-size:11.5px;color:var(--muted);margin-top:2px;}
+.summary-grade{font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;background:var(--purp-lt);color:var(--purple);white-space:nowrap;}
+.summary-delete{background:none;border:1px solid #fecaca;color:#dc2626;border-radius:7px;padding:4px 8px;font-size:11px;font-family:inherit;cursor:pointer;white-space:nowrap;}
+.summary-delete:hover{background:#fee2e2;}
+.exporting .summary-delete{display:none!important;}
+.exporting .summary-item{grid-template-columns:110px 1fr auto;}
+.summary-empty{background:#f9fafc;border:1px dashed var(--border);border-radius:12px;padding:16px;color:var(--muted);font-size:13px;text-align:center;}
 .sub-section-title{font-size:12px;font-weight:500;color:var(--muted);margin:18px 0 8px;letter-spacing:.5px;}
 .sub-original{background:#fff8e1;border:1px solid #f9c94e;border-radius:10px;padding:12px 16px;margin-bottom:10px;}
 .sub-original-hdr{font-size:12px;font-weight:600;color:#7d5700;margin-bottom:6px;}
-.sub-orig-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);padding:3px 0;}
+.sub-orig-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);padding:3px 0;flex-wrap:wrap;}
 .sub-orig-badge{background:var(--navy);color:#fff;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:500;}
 .avail-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
 .avail-card{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:border-color .15s,background .15s;}
@@ -86,6 +116,7 @@ tr:nth-child(even) .cell-subject{background:#f7f9fd;}
 .confirm-info{font-size:13px;line-height:1.5;}
 .confirm-btn{background:#fff;color:var(--navy);border:none;border-radius:7px;padding:7px 16px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;}
 .confirm-btn:hover{background:#e8f0fb;}
+.confirm-btn:disabled{background:#dbe6f5;color:#5c6f8f;cursor:default;}
 .sub-period-block{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);}
 .sub-period-block:last-of-type{border-bottom:none;}
 .log-table{width:100%;border-collapse:collapse;font-size:12.5px;}
@@ -140,43 +171,59 @@ const DATA={
   "ศุกร์":{"ป.1":["ไทย|(อุบลวรรณ)","คณิต|(อุบลวรรณ)","อังกฤษ|(อุบลวรรณ)","งานบ้าน|(อุบลวรรณ)","สังคม|(ณัฐวุฒิ)","อบรมสุดสัปดาห์"],"ป.2":["ประวัติ|(ธนพล)","คณิต|(ขวัญฤทัย)","ไทย|(พรชนก)","ต้านทุจริต|(อนรรฆ)","อังกฤษ|(ขวัญฤทัย)","อบรมสุดสัปดาห์"],"ป.3":["งานบ้าน|(พิจิตรา)","คณิต|(ขวัญเนตร)","ศิลปะ|(ธนพล)","อังกฤษ|(พรชนก)","ไทย|(พรชนก)","อบรมสุดสัปดาห์"],"ป.4":["สุขศึกษา|(อนรรฆ)","การงานอาชีพ|(ประสิทธิ์)","อังกฤษสื่อสาร|(สุณิษา)","ดนตรี|(ธนพล)","วิทย์|(สุณิษา)","อบรมสุดสัปดาห์"],"ป.5":["อังกฤษ|(ธิดาวรรณ)","ไทย|(ธีรพัฒน์)","สังคม|(ฐิติมา)","อังกฤษสื่อสาร|(ธิดาวรรณ)","วิทย์พลังสิบ|(พิจิตรา)","อบรมสุดสัปดาห์"],"ป.6":["วิทย์|(สุณิษา)","อังกฤษ|(ธิดาวรรณ)","สุขศึกษา|(อนรรฆ)","ประวัติ|(ณัฐวุฒิ)","ดนตรี|(ธนพล)","อบรมสุดสัปดาห์"],"ม.1":["คณิต|(ขวัญเนตร)","สังคม|(ฐิติมา)","ประวัติ|(ณัฐวุฒิ)","สังคม|(ฐิติมา)","พละ|(อนรรฆ)","อบรมสุดสัปดาห์"],"ม.2":["คอมพิวเตอร์|(สมภพ)","ประวัติ|(ณัฐวุฒิ)","อังกฤษ|(ธิดาวรรณ)","วิทย์เพิ่มเติม|(พิจิตรา)","สังคม|(ฐิติมา)","อบรมสุดสัปดาห์"],"ม.3":["ไทย|(ธีรพัฒน์)","วิทย์เพิ่มเติม|(พิจิตรา)","การงานอาชีพ|(ประสิทธิ์)","คอมพิวเตอร์เพิ่มเติม|(สมภพ)","อังกฤษ|(ธิดาวรรณ)","อบรมสุดสัปดาห์"]},
 };
 
-const TEACHER_DATA={
-  "ขวัญฤทัย":{"จันทร์":[null,null,{"subj":"คณิต","grade":"ป.2"},null,{"subj":"อังกฤษ","grade":"ป.2"},null],"อังคาร":[null,null,{"subj":"คณิต","grade":"ป.2"},{"subj":"อังกฤษ","grade":"ป.2"},null,null],"พุธ":[null,{"subj":"คณิต","grade":"ป.2"},null,null,{"subj":"อังกฤษ","grade":"ป.2"},null],"พฤหัสบดี":[{"subj":"อังกฤษ","grade":"ป.2"},null,{"subj":"คณิต","grade":"ป.2"},null,null,null],"ศุกร์":[null,{"subj":"คณิต","grade":"ป.2"},null,null,{"subj":"อังกฤษ","grade":"ป.2"},null]},
-  "ขวัญเนตร":{"จันทร์":[{"subj":"คณิต","grade":"ป.6"},{"subj":"คณิต","grade":"ป.3"},{"subj":"คณิต","grade":"ม.2"},{"subj":"คณิต","grade":"ม.1"},{"subj":"คณิต","grade":"ม.3"},null],"อังคาร":[{"subj":"คณิต","grade":"ม.1"},{"subj":"คณิต","grade":"ป.3"},{"subj":"คณิต","grade":"ม.2"},{"subj":"คณิต","grade":"ป.6"},{"subj":"คณิต","grade":"ม.3"},null],"พุธ":[{"subj":"คณิตเพิ่มเติม","grade":"ม.1"},{"subj":"คณิต","grade":"ป.3"},{"subj":"คณิต","grade":"ม.3"},{"subj":"คณิต","grade":"ป.6"},{"subj":"คณิต","grade":"ม.2"},null],"พฤหัสบดี":[{"subj":"คณิตเพิ่มเติม","grade":"ม.1"},{"subj":"คณิต","grade":"ป.3"},{"subj":"คณิต","grade":"ป.6"},null,null,null],"ศุกร์":[{"subj":"คณิต","grade":"ม.1"},{"subj":"คณิต","grade":"ป.3"},null,null,null,null]},
-  "ฐิติมา":{"จันทร์":[{"subj":"สังคม","grade":"ม.2"},{"subj":"สังคม","grade":"ม.3"},null,{"subj":"สังคม","grade":"ป.4"},null,{"subj":"สังคม","grade":"ม.2"}],"อังคาร":[null,{"subj":"สังคม","grade":"ป.5"},{"subj":"สังคม","grade":"ป.6"},{"subj":"สังคม","grade":"ม.3"},null,null],"พุธ":[null,null,{"subj":"สังคม","grade":"ม.1"},null,{"subj":"สังคม","grade":"ม.3"},null],"พฤหัสบดี":[null,{"subj":"สังคม","grade":"ป.6"},null,{"subj":"สังคม","grade":"ป.4"},null,null],"ศุกร์":[null,{"subj":"สังคม","grade":"ม.1"},{"subj":"สังคม","grade":"ป.5"},{"subj":"สังคม","grade":"ม.1"},{"subj":"สังคม","grade":"ม.2"},null]},
-  "ณัฐวุฒิ":{"จันทร์":[null,{"subj":"หน้าที่พลเมือง","grade":"ม.2"},null,{"subj":"เกษตร","grade":"ป.6"},{"subj":"สังคม","grade":"ป.3"},{"subj":"ลดเวลาเรียน","grade":"ป.2"}],"อังคาร":[{"subj":"หน้าที่พลเมือง","grade":"ป.2"},{"subj":"หน้าที่พลเมือง","grade":"ม.3"},{"subj":"สังคม","grade":"ป.3"},null,{"subj":"สังคม","grade":"ป.2"},null],"พุธ":[{"subj":"ประวัติ","grade":"ม.3"},null,null,{"subj":"ประวัติ","grade":"ป.4"},{"subj":"สังคม","grade":"ป.1"},null],"พฤหัสบดี":[{"subj":"ประวัติ","grade":"ป.3"},{"subj":"สังคม","grade":"ป.2"},null,{"subj":"หน้าที่พลเมือง","grade":"ม.1"},{"subj":"ประวัติ","grade":"ป.5"},null],"ศุกร์":[null,{"subj":"ประวัติ","grade":"ม.2"},{"subj":"ประวัติ","grade":"ม.1"},{"subj":"ประวัติ","grade":"ป.6"},{"subj":"สังคม","grade":"ป.1"},null]},
-  "ธนพล":{"จันทร์":[{"subj":"ดนตรี","grade":"ม.3"},null,{"subj":"ศิลปะ","grade":"ม.3"},{"subj":"ดนตรี","grade":"ป.5"},null,{"subj":"หน้าที่พลเมือง","grade":"ป.4"}],"อังคาร":[null,null,null,{"subj":"ศิลปะ","grade":"ม.2"},{"subj":"ศิลปะ","grade":"ป.4"},{"subj":"ศิลปะ","grade":"ป.2"}],"พุธ":[null,{"subj":"ดนตรี","grade":"ม.1"},null,null,{"subj":"เกษตร","grade":"ป.4"},null],"พฤหัสบดี":[{"subj":"ศิลปะ","grade":"ป.6"},{"subj":"ศิลปะ","grade":"ป.1"},{"subj":"ศิลปะ","grade":"ม.1"},{"subj":"ศิลปะ","grade":"ป.5"},{"subj":"ดนตรี","grade":"ม.2"},null],"ศุกร์":[{"subj":"ประวัติ","grade":"ป.2"},null,{"subj":"ศิลปะ","grade":"ป.3"},{"subj":"ดนตรี","grade":"ป.4"},{"subj":"ดนตรี","grade":"ป.6"},null]},
-  "ธิดาวรรณ":{"จันทร์":[{"subj":"อังกฤษ","grade":"ป.5"},{"subj":"อังกฤษ","grade":"ป.4"},{"subj":"อังกฤษสื่อสาร","grade":"ป.5"},null,null,{"subj":"อังกฤษ","grade":"ม.1"}],"อังคาร":[{"subj":"อังกฤษ","grade":"ม.2"},{"subj":"อังกฤษ","grade":"ป.6"},null,null,null,{"subj":"อังกฤษ","grade":"ม.1"}],"พุธ":[{"subj":"อังกฤษ","grade":"ป.4"},{"subj":"อังกฤษ","grade":"ม.2"},{"subj":"อังกฤษ","grade":"ป.6"},{"subj":"อังกฤษ","grade":"ม.3"},null,null],"พฤหัสบดี":[null,{"subj":"อังกฤษ","grade":"ม.1"},null,{"subj":"อังกฤษ","grade":"ม.3"},{"subj":"อังกฤษ","grade":"ป.6"},null],"ศุกร์":[{"subj":"อังกฤษ","grade":"ป.5"},{"subj":"อังกฤษ","grade":"ป.6"},{"subj":"อังกฤษ","grade":"ม.2"},{"subj":"อังกฤษสื่อสาร","grade":"ป.5"},{"subj":"อังกฤษ","grade":"ม.3"},null]},
-  "ธีรพัฒน์":{"จันทร์":[null,{"subj":"ไทย","grade":"ป.6"},{"subj":"ไทย","grade":"ม.1"},{"subj":"ไทย","grade":"ม.3"},{"subj":"ไทย","grade":"ม.2"},{"subj":"ไทย","grade":"ป.5"}],"อังคาร":[{"subj":"ไทย","grade":"ป.6"},{"subj":"ไทย","grade":"ม.1"},{"subj":"ไทย","grade":"ป.5"},{"subj":"ไทย","grade":"ม.1"},null,null],"พุธ":[null,{"subj":"ไทย","grade":"ป.6"},{"subj":"ไทย","grade":"ป.5"},{"subj":"ไทย","grade":"ม.2"},null,null],"พฤหัสบดี":[{"subj":"ไทย","grade":"ม.2"},null,null,{"subj":"ไทย","grade":"ป.6"},{"subj":"ไทย","grade":"ม.3"},null],"ศุกร์":[{"subj":"ไทย","grade":"ม.3"},{"subj":"ไทย","grade":"ป.5"},null,null,null,null]},
-  "ประสิทธิ์":{"จันทร์":[null,null,null,null,{"subj":"หน้าที่พลเมือง","grade":"ป.6"},null],"อังคาร":[null,null,{"subj":"การงานอาชีพ","grade":"ม.1"},null,{"subj":"หน้าที่พลเมือง","grade":"ป.3"},{"subj":"ต้านทุจริต","grade":"ป.4"}],"พุธ":[{"subj":"การงานอาชีพ","grade":"ม.2"},null,null,null,null,null],"พฤหัสบดี":[null,null,null,null,null,null],"ศุกร์":[null,{"subj":"การงานอาชีพ","grade":"ป.4"},{"subj":"การงานอาชีพ","grade":"ม.3"},null,null,null]},
-  "พรชนก":{"จันทร์":[{"subj":"ไทย","grade":"ป.3"},{"subj":"ไทย","grade":"ป.2"},null,{"subj":"อังกฤษ","grade":"ป.3"},{"subj":"ไทย","grade":"ป.4"},null],"อังคาร":[{"subj":"ไทย","grade":"ป.3"},{"subj":"ไทย","grade":"ป.2"},{"subj":"ไทย","grade":"ป.4"},null,null,{"subj":"อังกฤษ","grade":"ป.3"}],"พุธ":[{"subj":"ไทย","grade":"ป.2"},{"subj":"ไทย","grade":"ป.4"},{"subj":"ไทย","grade":"ป.3"},{"subj":"อังกฤษ","grade":"ป.3"},{"subj":"อังกฤษ","grade":"ป.3"},null],"พฤหัสบดี":[null,null,{"subj":"ไทย","grade":"ป.4"},{"subj":"ไทย","grade":"ป.2"},{"subj":"ไทย","grade":"ป.3"},null],"ศุกร์":[null,null,{"subj":"ไทย","grade":"ป.2"},{"subj":"อังกฤษ","grade":"ป.3"},{"subj":"ไทย","grade":"ป.3"},null]},
-  "พิจิตรา":{"จันทร์":[{"subj":"วิทย์","grade":"ม.1"},null,null,{"subj":"วิทย์","grade":"ม.2"},null,null],"อังคาร":[{"subj":"วิทย์","grade":"ม.3"},null,{"subj":"วิทย์","grade":"ม.3"},{"subj":"วิทย์พลังสิบ","grade":"ป.4"},{"subj":"วิทย์","grade":"ม.1"},{"subj":"วิทย์","grade":"ม.2"}],"พุธ":[null,{"subj":"วิทย์","grade":"ม.3"},{"subj":"วิทย์","grade":"ม.2"},{"subj":"วิทย์","grade":"ม.1"},null,null],"พฤหัสบดี":[{"subj":"วิทย์เพิ่มเติม","grade":"ม.3"},null,{"subj":"วิทย์เพิ่มเติม","grade":"ม.2"},{"subj":"ประวัติ","grade":"ป.1"},{"subj":"งานบ้าน","grade":"ป.2"},null],"ศุกร์":[{"subj":"งานบ้าน","grade":"ป.3"},{"subj":"วิทย์เพิ่มเติม","grade":"ม.3"},null,{"subj":"วิทย์เพิ่มเติม","grade":"ม.2"},{"subj":"วิทย์พลังสิบ","grade":"ป.5"},null]},
-  "ลาวัลย์":{"จันทร์":[{"subj":"คณิต","grade":"ป.4"},{"subj":"คณิต","grade":"ป.5"},null,null,null,null],"อังคาร":[{"subj":"คณิต","grade":"ป.5"},{"subj":"คณิต","grade":"ป.4"},null,null,null,null],"พุธ":[{"subj":"คณิต","grade":"ป.5"},null,{"subj":"คณิต","grade":"ป.4"},null,null,null],"พฤหัสบดี":[null,{"subj":"คณิต","grade":"ป.4"},{"subj":"คณิต","grade":"ป.5"},null,null,null],"ศุกร์":[null,null,null,null,null,null]},
-  "สมภพ":{"จันทร์":[null,{"subj":"คอมพิวเตอร์","grade":"ม.1"},{"subj":"การงานอาชีพ","grade":"ป.6"},null,{"subj":"วิทย์เทคโน","grade":"ม.1"},{"subj":"ลดเวลาเรียน","grade":"ป.3"}],"อังคาร":[{"subj":"วิทย์เทคโน","grade":"ป.4"},null,null,{"subj":"วิทย์เทคโน","grade":"ป.1"},{"subj":"วิทย์เทคโน","grade":"ป.6"},{"subj":"คอมพิวเตอร์เพิ่มเติม","grade":"ม.3"}],"พุธ":[{"subj":"วิทย์เทคโน","grade":"ป.3"},{"subj":"วิทย์เทคโน","grade":"ป.5"},{"subj":"วิทย์เทคโน","grade":"ป.2"},null,{"subj":"คอมพิวเตอร์","grade":"ม.1"},null],"พฤหัสบดี":[{"subj":"การงานอาชีพ","grade":"ป.5"},{"subj":"คอมพิวเตอร์","grade":"ม.2"},{"subj":"วิทย์เทคโน","grade":"ม.3"},{"subj":"วิทย์เทคโน","grade":"ม.2"},null,null],"ศุกร์":[{"subj":"คอมพิวเตอร์","grade":"ม.2"},null,null,{"subj":"คอมพิวเตอร์เพิ่มเติม","grade":"ม.3"},null,null]},
-  "สุณิษา":{"จันทร์":[{"subj":"วิทย์","grade":"ป.2"},null,{"subj":"วิทย์","grade":"ป.3"},{"subj":"วิทย์","grade":"ป.1"},{"subj":"ต้านทุจริต","grade":"ป.5"},{"subj":"วิทย์","grade":"ป.6"}],"อังคาร":[null,null,{"subj":"วิทย์","grade":"ป.1"},{"subj":"วิทย์","grade":"ป.5"},{"subj":"หน้าที่พลเมือง","grade":"ป.5"},{"subj":"วิทย์พลังสิบ","grade":"ป.6"}],"พุธ":[null,null,null,{"subj":"วิทย์","grade":"ป.2"},{"subj":"ต้านทุจริต","grade":"ป.6"},null],"พฤหัสบดี":[{"subj":"วิทย์","grade":"ป.4"},{"subj":"วิทย์","grade":"ป.5"},{"subj":"วิทย์","grade":"ป.3"},null,{"subj":"อังกฤษสื่อสาร","grade":"ป.4"},null],"ศุกร์":[{"subj":"วิทย์","grade":"ป.6"},null,{"subj":"อังกฤษสื่อสาร","grade":"ป.4"},null,{"subj":"วิทย์","grade":"ป.4"},null]},
-  "อนรรฆ":{"จันทร์":[null,null,{"subj":"พละ","grade":"ป.4"},{"subj":"สุขศึกษา","grade":"ป.2"},null,{"subj":"สุขศึกษา","grade":"ม.3"}],"อังคาร":[null,{"subj":"สุขศึกษา","grade":"ม.2"},null,{"subj":"สุขศึกษา","grade":"ป.3"},{"subj":"พละ","grade":"ม.2"},{"subj":"เกษตร","grade":"ป.5"}],"พุธ":[{"subj":"พละ","grade":"ป.6"},{"subj":"สุขศึกษา","grade":"ป.1"},null,{"subj":"สุขศึกษา","grade":"ป.5"},{"subj":"พละ","grade":"ป.5"},null],"พฤหัสบดี":[null,{"subj":"พละ","grade":"ม.3"},null,{"subj":"ต้านทุจริต","grade":"ป.3"},{"subj":"สุขศึกษา","grade":"ม.1"},null],"ศุกร์":[{"subj":"สุขศึกษา","grade":"ป.4"},null,{"subj":"สุขศึกษา","grade":"ป.6"},{"subj":"ต้านทุจริต","grade":"ป.2"},{"subj":"พละ","grade":"ม.1"},null]},
-  "อุบลวรรณ":{"จันทร์":[{"subj":"ไทย","grade":"ป.1"},{"subj":"คณิต","grade":"ป.1"},{"subj":"อังกฤษ","grade":"ป.1"},null,{"subj":"ต้านทุจริต","grade":"ป.1"},{"subj":"ลดเวลาเรียน","grade":"ป.1"}],"อังคาร":[{"subj":"ไทย","grade":"ป.1"},{"subj":"คณิต","grade":"ป.1"},null,null,{"subj":"อังกฤษ","grade":"ป.1"},{"subj":"หน้าที่พลเมือง","grade":"ป.1"}],"พุธ":[{"subj":"ไทย","grade":"ป.1"},null,{"subj":"คณิต","grade":"ป.1"},{"subj":"อังกฤษ","grade":"ป.1"},null,null],"พฤหัสบดี":[{"subj":"ไทย","grade":"ป.1"},null,{"subj":"คณิต","grade":"ป.1"},null,{"subj":"อังกฤษ","grade":"ป.1"},null],"ศุกร์":[{"subj":"ไทย","grade":"ป.1"},{"subj":"คณิต","grade":"ป.1"},{"subj":"อังกฤษ","grade":"ป.1"},{"subj":"งานบ้าน","grade":"ป.1"},null,null]},
-};
+function parse(raw){
+  var parts=String(raw).split('|');
+  return {subj:parts[0]||'',teacher:parts[1]?parts[1].replace(/[()]/g,''):''};
+}
 
-// เพิ่มคาบพิเศษให้ทุกคน
+function escapeHtml(value){
+  return String(value).replace(/[&<>"']/g,function(ch){
+    return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]);
+  });
+}
+
+function jsArg(value){
+  return JSON.stringify(String(value));
+}
+
+function createTeacherData(){
+  var teachers={};
+  DAYS.forEach(function(day){
+    GRADES.forEach(function(grade){
+      (DATA[day][grade]||[]).forEach(function(raw,periodIdx){
+        if(!raw) return;
+        var parsed=parse(raw);
+        if(!parsed.teacher) return;
+        if(!teachers[parsed.teacher]){
+          teachers[parsed.teacher]={};
+          DAYS.forEach(function(d){
+            teachers[parsed.teacher][d]=[null,null,null,null,null,null];
+          });
+        }
+        teachers[parsed.teacher][day][periodIdx]={subj:parsed.subj,grade:grade};
+      });
+    });
+  });
+
+  Object.keys(teachers).forEach(function(t){
+    teachers[t]["พุธ"][5]={subj:"ชุมนุม",grade:"ทุกชั้น"};
+    teachers[t]["พฤหัสบดี"][5]={subj:"ลูกเสือ",grade:"ทุกชั้น"};
+    teachers[t]["ศุกร์"][5]={subj:"อบรมสุดสัปดาห์",grade:"ทุกชั้น"};
+  });
+
+  return teachers;
+}
+
+const TEACHER_DATA=createTeacherData();
 const ALL_TEACHERS=Object.keys(TEACHER_DATA).sort();
-ALL_TEACHERS.forEach(function(t){
-  TEACHER_DATA[t]["พุธ"][5]={subj:"ชุมนุม",grade:"ทุกชั้น"};
-  TEACHER_DATA[t]["พฤหัสบดี"][5]={subj:"ลูกเสือ",grade:"ทุกชั้น"};
-  TEACHER_DATA[t]["ศุกร์"][5]={subj:"อบรมสุดสัปดาห์",grade:"ทุกชั้น"};
-});
 
 let mode='day', selected='จันทร์';
 
-function parse(raw){
-  var parts=raw.split('|');
-  return {subj:parts[0]||'',teacher:parts[1]?parts[1].replace(/[()]/g,''):''};
-}
 function isSpecial(s){return SPECIAL.has(s);}
 
 function periodHeaderRow(){
   return PERIODS.map(function(p){
-    return '<th class="th-period th-'+p.type+'">'+p.label+'<br><small>'+p.time+'</small></th>';
+    return '<th class="th-period th-'+p.type+'">'+escapeHtml(p.label)+'<br><small>'+escapeHtml(p.time)+'</small></th>';
   }).join('');
 }
 
@@ -185,7 +232,7 @@ function subjectCell(raw,even){
   var p=parse(raw);
   var sp=isSpecial(p.subj)?'special':'';
   var bg=sp?'':(even?'background:#f7f9fd':'background:#fff');
-  return '<td class="cell-subject '+sp+'" style="'+bg+'"><span class="subj">'+p.subj+'</span>'+(p.teacher?'<span class="meta">'+p.teacher+'</span>':'')+'</td>';
+  return '<td class="cell-subject '+sp+'" style="'+bg+'"><span class="subj">'+escapeHtml(p.subj)+'</span>'+(p.teacher?'<span class="meta">'+escapeHtml(p.teacher)+'</span>':'')+'</td>';
 }
 
 function buildDayView(){
@@ -193,7 +240,7 @@ function buildDayView(){
   GRADES.forEach(function(g,i){
     var mid=g.startsWith('ม');
     var even=i%2===1;
-    h+='<tr><td class="grade-label'+(mid?' mid':'')+'">'+g+'</td>';
+    h+='<tr><td class="grade-label'+(mid?' mid':'')+'">'+escapeHtml(g)+'</td>';
     var s=DATA[selected][g];
     h+=subjectCell(s[0],even)+subjectCell(s[1],even)+subjectCell(s[2],even);
     h+='<td class="cell-lunch">🍽<br>พัก</td>';
@@ -207,7 +254,7 @@ function buildGradeView(){
   var h='<div class="table-wrap"><table><thead><tr><th class="th-corner">วัน</th>'+periodHeaderRow()+'</tr></thead><tbody>';
   DAYS.forEach(function(d,i){
     var even=i%2===1;
-    h+='<tr><td class="day-label">'+d+'</td>';
+    h+='<tr><td class="day-label">'+escapeHtml(d)+'</td>';
     var s=DATA[d][selected];
     h+=subjectCell(s[0],even)+subjectCell(s[1],even)+subjectCell(s[2],even);
     h+='<td class="cell-lunch">🍽<br>พัก</td>';
@@ -225,19 +272,19 @@ function buildTeacherView(){
     +'<div class="stat-card"><div class="stat-num">'+total+'</div><div class="stat-label">คาบ/สัปดาห์</div></div>'
     +'<div class="stat-card"><div class="stat-num">'+gradeSet.size+'</div><div class="stat-label">ชั้นที่สอน</div></div>'
     +'<div class="stat-card"><div class="stat-num">'+subjSet.size+'</div><div class="stat-label">วิชาที่สอน</div></div>'
-    +'<div class="stat-card" style="text-align:left;min-width:160px"><div class="stat-label" style="margin-bottom:5px">ชั้นที่สอน</div><div style="font-size:12px;line-height:1.7">'+[...gradeSet].join(', ')+'</div></div>'
+    +'<div class="stat-card" style="text-align:left;min-width:160px"><div class="stat-label" style="margin-bottom:5px">ชั้นที่สอน</div><div style="font-size:12px;line-height:1.7">'+escapeHtml([...gradeSet].join(', '))+'</div></div>'
     +'</div>';
   h+='<div class="table-wrap"><table><thead><tr><th class="th-corner">วัน</th>'+periodHeaderRow()+'</tr></thead><tbody>';
   DAYS.forEach(function(d,i){
     var bg=i%2===1?'#f7f9fd':'#fff';
-    h+='<tr><td class="teacher-day-label">'+d+'</td>';
+    h+='<tr><td class="teacher-day-label">'+escapeHtml(d)+'</td>';
     [0,1,2].forEach(function(pi){
       var p=td[d][pi];
       if(p){
         var isMid=p.grade.startsWith('ม')||p.grade==='ทุกชั้น';
         var badgeBg=isMid?'var(--purp-lt)':'var(--blue-lt)';
         var badgeFg=isMid?'var(--purple)':'var(--navy)';
-        h+='<td class="cell-subject" style="background:'+bg+'"><span class="subj">'+p.subj+'</span><span class="meta" style="background:'+badgeBg+';color:'+badgeFg+';border-radius:4px;padding:1px 5px;font-size:10px;margin-top:3px;display:inline-block">'+p.grade+'</span></td>';
+        h+='<td class="cell-subject" style="background:'+bg+'"><span class="subj">'+escapeHtml(p.subj)+'</span><span class="meta" style="background:'+badgeBg+';color:'+badgeFg+';border-radius:4px;padding:1px 5px;font-size:10px;margin-top:3px;display:inline-block">'+escapeHtml(p.grade)+'</span></td>';
       } else {
         h+='<td class="cell-free" style="background:'+bg+'">—</td>';
       }
@@ -249,7 +296,7 @@ function buildTeacherView(){
         var isMid=p.grade.startsWith('ม')||p.grade==='ทุกชั้น';
         var badgeBg=isMid?'var(--purp-lt)':'var(--blue-lt)';
         var badgeFg=isMid?'var(--purple)':'var(--navy)';
-        h+='<td class="cell-subject" style="background:'+bg+'"><span class="subj">'+p.subj+'</span><span class="meta" style="background:'+badgeBg+';color:'+badgeFg+';border-radius:4px;padding:1px 5px;font-size:10px;margin-top:3px;display:inline-block">'+p.grade+'</span></td>';
+        h+='<td class="cell-subject" style="background:'+bg+'"><span class="subj">'+escapeHtml(p.subj)+'</span><span class="meta" style="background:'+badgeBg+';color:'+badgeFg+';border-radius:4px;padding:1px 5px;font-size:10px;margin-top:3px;display:inline-block">'+escapeHtml(p.grade)+'</span></td>';
       } else {
         h+='<td class="cell-free" style="background:'+bg+'">—</td>';
       }
@@ -259,9 +306,18 @@ function buildTeacherView(){
   return h+'</tbody></table></div>';
 }
 
-// ===== SUB MODE =====
-var subLog=JSON.parse(localStorage.getItem('subLog')||'[]');
-var subDay='จันทร์', subAbsentTeacher=ALL_TEACHERS[0], subPickedMap={};
+var subLog=safeLoadLog();
+var subDate=todayIso(), subDay=weekdayFromIso(subDate), subAbsentTeacher=ALL_TEACHERS[0], subPickedMap={};
+
+function safeLoadLog(){
+  try{
+    var raw=localStorage.getItem('subLog');
+    var parsed=raw?JSON.parse(raw):[];
+    return Array.isArray(parsed)?parsed:[];
+  }catch(e){
+    return [];
+  }
+}
 
 function getAbsentPeriods(teacher,day){
   return TEACHER_DATA[teacher][day].map(function(s,i){return {idx:i,data:s};}).filter(function(x){return x.data;});
@@ -277,16 +333,79 @@ function avatarCol(name){
   return c[name.charCodeAt(0)%c.length];
 }
 
+function todayIso(){
+  var d=new Date();
+  var y=d.getFullYear();
+  var m=String(d.getMonth()+1).padStart(2,'0');
+  var day=String(d.getDate()).padStart(2,'0');
+  return y+'-'+m+'-'+day;
+}
+
+function weekdayFromIso(iso){
+  if(!iso) return 'จันทร์';
+  var d=new Date(iso+'T12:00:00');
+  var map=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+  return map[d.getDay()]||'จันทร์';
+}
+
+function thaiDateLabel(iso){
+  if(!iso) return 'ไม่ระบุวันที่';
+  try{
+    return new Intl.DateTimeFormat('th-TH-u-ca-buddhist', {dateStyle:'full'}).format(new Date(iso+'T12:00:00'));
+  }catch(e){
+    return iso;
+  }
+}
+
+function timeLabelForPeriod(periodIdx){
+  return PERIODS[periodIdx]?PERIODS[periodIdx].time:'';
+}
+
+function subLogKey(entry){
+  return [
+    entry.date||'',
+    entry.day||'',
+    entry.absentTeacher||'',
+    Number(entry.periodIdx),
+    entry.grade||'',
+    entry.subject||''
+  ].join('|');
+}
+
+function syncSubDateFromInput(){
+  var dayEl=document.getElementById('sub-date');
+  if(dayEl){
+    subDate=dayEl.value||subDate;
+    subDay=weekdayFromIso(subDate);
+    var weekdayEl=document.getElementById('sub-date-weekday');
+    if(weekdayEl) weekdayEl.textContent=thaiDateLabel(subDate);
+  }
+}
+
+function findSubLogIndex(date,day,absentTeacher,periodIdx){
+  return subLog.findIndex(function(entry){
+    return entry.date===date &&
+      entry.day===day &&
+      entry.absentTeacher===absentTeacher &&
+      Number(entry.periodIdx)===Number(periodIdx);
+  });
+}
+
+function getSavedSubEntry(date,day,absentTeacher,periodIdx){
+  var idx=findSubLogIndex(date,day,absentTeacher,periodIdx);
+  return idx>=0?subLog[idx]:null;
+}
+
 function buildSubView(){
   return '<div>'
     +'<div class="sub-top">'
-    +'<div><div class="sub-label">วันที่ไม่ว่าง</div>'
-    +'<select class="sub-select" id="sub-day" onchange="subDay=this.value;subPickedMap={};renderSubBody()">'
-    +DAYS.map(function(d){return '<option value="'+d+'"'+(d===subDay?' selected':'')+'>'+d+'</option>';}).join('')
-    +'</select></div>'
+    +'<div class="sub-date-wrap"><div class="sub-label">วันที่จัดสอนแทน</div>'
+    +'<div class="sub-date-row"><input class="sub-date" id="sub-date" type="date" value="'+escapeHtml(subDate)+'" onchange="setSubDate(this.value)">'
+    +'<div style="font-size:13px;font-weight:600;color:var(--navy)">วัน'+escapeHtml(subDay)+'</div></div>'
+    +'<div class="sub-date-weekday" id="sub-date-weekday">'+escapeHtml(thaiDateLabel(subDate))+'</div></div>'
     +'<div><div class="sub-label">ครูที่ไม่ว่าง / ลา</div>'
     +'<select class="sub-select" id="sub-teacher" onchange="subAbsentTeacher=this.value;subPickedMap={};renderSubBody()">'
-    +ALL_TEACHERS.map(function(t){return '<option value="'+t+'"'+(t===subAbsentTeacher?' selected':'')+'>ครู'+t+'</option>';}).join('')
+    +ALL_TEACHERS.map(function(t){return '<option value="'+escapeHtml(t)+'"'+(t===subAbsentTeacher?' selected':'')+'>ครู'+escapeHtml(t)+'</option>';}).join('')
     +'</select></div>'
     +'</div>'
     +'<div id="sub-body"></div>'
@@ -296,45 +415,57 @@ function buildSubView(){
 function renderSubBody(){
   var bodyEl=document.getElementById('sub-body');
   if(!bodyEl) return;
-  subDay=document.getElementById('sub-day').value;
+  syncSubDateFromInput();
   subAbsentTeacher=document.getElementById('sub-teacher').value;
   var absentPeriods=getAbsentPeriods(subAbsentTeacher,subDay);
   var h='';
   if(absentPeriods.length===0){
-    h='<div class="no-free">ครู'+subAbsentTeacher+' ไม่มีคาบสอนวัน'+subDay+' ไม่ต้องหาครูสอนแทน</div>';
+    h='<div class="no-free">ครู'+escapeHtml(subAbsentTeacher)+' ไม่มีคาบสอนวัน'+escapeHtml(subDay)+' ไม่ต้องหาครูสอนแทน</div>';
     bodyEl.innerHTML=h+renderLogHTML();
     return;
   }
   absentPeriods.forEach(function(item){
     var idx=item.idx; var data=item.data;
     var freeList=getFreeTeachers(subDay,idx,subAbsentTeacher);
+    var savedEntry=getSavedSubEntry(subDate,subDay,subAbsentTeacher,idx);
+    if(savedEntry && !Object.prototype.hasOwnProperty.call(subPickedMap, idx)){
+      subPickedMap[idx]=savedEntry.substitute;
+    }
     var picked=subPickedMap[idx]||null;
     h+='<div class="sub-period-block">';
-    h+='<div class="sub-original"><div class="sub-original-hdr">📋 '+PERIOD_SHORT[idx]+' — ต้องหาครูสอนแทน</div>';
-    h+='<div class="sub-orig-row"><span class="sub-orig-badge">'+data.grade+'</span> <span style="font-size:13px;font-weight:500">'+data.subj+'</span> <span style="font-size:12px;color:var(--amber)">( ครู'+subAbsentTeacher+' )</span></div></div>';
+    h+='<div class="sub-original"><div class="sub-original-hdr">📋 '+escapeHtml(PERIOD_SHORT[idx])+' · '+escapeHtml(PERIODS[idx].time)+' — ต้องหาครูสอนแทน</div>';
+    h+='<div class="sub-orig-row"><span class="sub-orig-badge">'+escapeHtml(data.grade)+'</span> <span style="font-size:13px;font-weight:500">'+escapeHtml(data.subj)+'</span> <span style="font-size:12px;color:var(--amber)">( ครู'+escapeHtml(subAbsentTeacher)+' )</span></div></div>';
     if(freeList.length===0){
-      h+='<div class="no-free">ครูทุกคนมีคาบใน'+PERIOD_SHORT[idx]+' ไม่มีครูว่าง</div>';
+      h+='<div class="no-free">ครูทุกคนมีคาบใน'+escapeHtml(PERIOD_SHORT[idx])+' ไม่มีครูว่าง</div>';
     } else {
       h+='<div class="sub-label" style="margin-bottom:6px">ครูที่ว่าง '+freeList.length+' คน — กดเลือกเพื่อจัดสอนแทน</div><div class="avail-list">';
       freeList.forEach(function(t){
         var col=avatarCol(t);
         var isPicked=picked===t;
         var dayLoad=TEACHER_DATA[t][subDay].map(function(s,i){return {i:i,s:s};});
-        var busyCount=dayLoad.filter(function(x){return x.s;}).length;
-        h+='<div class="avail-card'+(isPicked?' picked':'')+'" onclick="togglePick('+idx+',\''+t+'\')">';
-        h+='<div class="avail-avatar" style="background:'+col.bg+';color:'+col.fg+'">'+t[0]+'</div>';
-        h+='<div style="flex:1"><div class="avail-name">ครู'+t+(isPicked?' ✓':'')+'</div>';
-        h+='<div class="avail-stat">สอน '+busyCount+' คาบในวัน'+subDay+'</div>';
+      var busyCount=dayLoad.filter(function(x){return x.s;}).length;
+        h+='<div class="avail-card'+(isPicked?' picked':'')+'" onclick=\'togglePick('+idx+','+jsArg(t)+')\'>';
+        h+='<div class="avail-avatar" style="background:'+col.bg+';color:'+col.fg+'">'+escapeHtml(t[0])+'</div>';
+        h+='<div style="flex:1"><div class="avail-name">ครู'+escapeHtml(t)+(isPicked?' ✓':'')+'</div>';
+        h+='<div class="avail-stat">สอน '+busyCount+' คาบในวัน'+escapeHtml(subDay)+'</div>';
         h+='<div class="avail-periods">';
         dayLoad.forEach(function(x){
           if(x.i===idx) return;
-          h+=x.s?'<span class="pb pb-busy">'+PERIOD_SHORT[x.i]+': '+x.s.subj+'</span>':'<span class="pb pb-free">'+PERIOD_SHORT[x.i]+': ว่าง</span>';
+          h+=x.s?'<span class="pb pb-busy">'+escapeHtml(PERIOD_SHORT[x.i])+': '+escapeHtml(x.s.subj)+'</span>':'<span class="pb pb-free">'+escapeHtml(PERIOD_SHORT[x.i])+': ว่าง</span>';
         });
         h+='</div></div></div>';
       });
       h+='</div>';
       if(picked){
-        h+='<div class="confirm-bar"><div class="confirm-info">จัด <strong>ครู'+picked+'</strong> สอนแทน '+subDay+' '+PERIOD_SHORT[idx]+'<br><span style="opacity:.7;font-size:12px">'+data.grade+' — '+data.subj+'</span></div><button class="confirm-btn" onclick="confirmSub('+idx+')">บันทึก ✓</button></div>';
+        var buttonLabel='บันทึก ✓';
+        var buttonDisabled='';
+        if(savedEntry && savedEntry.substitute===picked){
+          buttonLabel='บันทึกแล้ว';
+          buttonDisabled=' disabled';
+        }else if(savedEntry){
+          buttonLabel='อัปเดตการสอนแทน';
+        }
+        h+='<div class="confirm-bar"><div class="confirm-info">จัด <strong>ครู'+escapeHtml(picked)+'</strong> สอนแทน '+escapeHtml(subDay)+' '+escapeHtml(PERIOD_SHORT[idx])+'<br><span style="opacity:.7;font-size:12px">'+escapeHtml(data.grade)+' — '+escapeHtml(data.subj)+'</span></div><button class="confirm-btn"'+buttonDisabled+' onclick="confirmSub('+idx+')">'+buttonLabel+'</button></div>';
       }
     }
     h+='</div>';
@@ -344,13 +475,51 @@ function renderSubBody(){
   bodyEl.innerHTML=h;
 }
 
-function renderLogHTML(){
-  if(subLog.length===0) return '<div class="log-empty">ยังไม่มีการบันทึก</div>';
-  var h='<div class="table-wrap"><table class="log-table"><thead><tr><th>วัน / คาบ</th><th>วิชา / ชั้น</th><th>ครูสอนแทน</th><th></th></tr></thead><tbody>';
-  subLog.forEach(function(e,i){
-    h+='<tr><td>'+e.day+' '+e.periodLabel+'</td><td style="color:var(--muted);font-size:11.5px">'+e.original+'</td><td><strong>ครู'+e.substitute+'</strong></td><td><button class="del-btn" onclick="deleteSub('+i+')">ลบ</button></td></tr>';
+function sortLogEntries(entries){
+  return entries.slice().sort(function(a,b){
+    var ad=a.date||('legacy-'+(a.day||'')), bd=b.date||('legacy-'+(b.day||''));
+    if(ad!==bd) return ad<bd?1:-1;
+    return (a.periodIdx||0)-(b.periodIdx||0);
   });
-  return h+'</tbody></table></div>';
+}
+
+function groupLogEntries(entries){
+  var grouped={};
+  entries.forEach(function(e){
+    var key=e.date?e.date:'legacy-'+(e.day||'unknown');
+    if(!grouped[key]){
+      grouped[key]={date:e.date||'', day:e.day||'', entries:[]};
+    }
+    grouped[key].entries.push({entry:e,key:subLogKey(e)});
+  });
+  return Object.keys(grouped).map(function(key){return {key:key,data:grouped[key]};}).sort(function(a,b){
+    if(a.data.date!==b.data.date) return a.data.date<b.data.date?1:-1;
+    return a.key<b.key?1:-1;
+  });
+}
+
+function renderLogHTML(){
+  var entries=sortLogEntries(subLog);
+  var groups=groupLogEntries(entries);
+  var h='<div class="sub-summary" id="sub-summary">';
+  h+='<div class="sub-summary-head"><div><div class="sub-summary-title">สรุปการจัดสอนแทน</div><div class="summary-group-sub">เรียงตามวันและเวลาคาบ เพื่อดูงานล่วงหน้าได้ง่าย</div></div><div class="summary-toolbar"><button class="export-btn" onclick="downloadSummaryPng()">บันทึก</button><button class="export-btn" onclick="copySummaryPng()">คัดลอก</button></div></div>';
+  if(subLog.length===0){
+    h+='<div class="summary-empty">ยังไม่มีการบันทึกการสอนแทน</div></div>';
+    return h;
+  }
+  groups.forEach(function(group){
+    var dayLabel=group.data.date?thaiDateLabel(group.data.date):('วัน'+(group.data.day||'ไม่ระบุ'));
+    var periodCount=group.data.entries.length;
+    h+='<div class="summary-group">';
+    h+='<div class="summary-group-head"><div><div class="summary-group-date">'+escapeHtml(dayLabel)+'</div><div class="summary-group-sub">วัน'+escapeHtml(group.data.day||weekdayFromIso(group.data.date))+' · '+periodCount+' รายการ</div></div><div class="summary-badges"><span class="summary-pill primary">'+escapeHtml(periodCount+' คาบ')+'</span></div></div>';
+    group.data.entries.forEach(function(pair){
+      var e=pair.entry;
+      h+='<div class="summary-item"><div><div class="summary-time">'+escapeHtml(e.periodTime||PERIODS[e.periodIdx||0].time||'')+'</div><div class="summary-meta">'+escapeHtml(e.periodLabel||'')+'</div></div><div><div class="summary-main"><strong>'+escapeHtml(e.grade||'')+'</strong> '+escapeHtml(e.subject||e.original||'')+'</div><div class="summary-meta">ครูเดิม '+escapeHtml(e.absentTeacher||'')+' · ครูสอนแทน <strong>ครู'+escapeHtml(e.substitute||'')+'</strong></div></div><div class="summary-grade">'+escapeHtml(e.day||group.data.day||'')+'</div><button class="summary-delete" onclick=\'deleteSubByKey('+jsArg(pair.key)+')\'>ลบ</button></div>';
+    });
+    h+='</div>';
+  });
+  h+='</div>';
+  return h;
 }
 
 function saveLog(){localStorage.setItem('subLog',JSON.stringify(subLog));}
@@ -360,36 +529,127 @@ function togglePick(periodIdx,teacher){
   renderSubBody();
 }
 function confirmSub(periodIdx){
+  syncSubDateFromInput();
   var data=TEACHER_DATA[subAbsentTeacher][subDay][periodIdx];
-  subLog.unshift({day:subDay,periodLabel:PERIOD_SHORT[periodIdx],substitute:subPickedMap[periodIdx],original:data.grade+' — '+data.subj+' (ครู'+subAbsentTeacher+')'});
-  delete subPickedMap[periodIdx];
+  var substitute=subPickedMap[periodIdx];
+  if(!data || !substitute) return;
+  var record={
+    date:subDate,
+    day:subDay,
+    periodIdx:periodIdx,
+    periodLabel:PERIOD_SHORT[periodIdx],
+    periodTime:timeLabelForPeriod(periodIdx),
+    grade:data.grade,
+    subject:data.subj,
+    absentTeacher:subAbsentTeacher,
+    substitute:substitute,
+    original:data.grade+' — '+data.subj+' (ครู'+subAbsentTeacher+')'
+  };
+  var existingIndex=findSubLogIndex(subDate,subDay,subAbsentTeacher,periodIdx);
+  if(existingIndex>=0) subLog.splice(existingIndex,1,record);
+  else subLog.unshift(record);
+  subPickedMap[periodIdx]=substitute;
   saveLog();
   renderSubBody();
 }
-function deleteSub(i){subLog.splice(i,1);saveLog();renderSubBody();}
+function deleteSubByKey(key){
+  var idx=subLog.findIndex(function(entry){return subLogKey(entry)===key;});
+  if(idx<0) return;
+  var removed=subLog[idx];
+  subLog.splice(idx,1);
+  if(removed.date===subDate && removed.day===subDay && removed.absentTeacher===subAbsentTeacher){
+    delete subPickedMap[removed.periodIdx];
+  }
+  saveLog();
+  renderSubBody();
+}
 
-// ===== LEGEND =====
+function setSubDate(value){
+  subDate=value||todayIso();
+  subDay=weekdayFromIso(subDate);
+  subPickedMap={};
+  renderSubBody();
+}
+
+async function exportSummaryImage(){
+  var summary=document.getElementById('sub-summary');
+  if(!summary){
+    alert('ยังไม่มีตารางสรุปให้ส่งออก');
+    return null;
+  }
+  if(typeof html2canvas!=='function'){
+    alert('เครื่องมือนำออกรูปยังไม่พร้อมใช้งาน');
+    return null;
+  }
+  summary.classList.add('exporting');
+  var canvas;
+  try{
+    canvas=await html2canvas(summary,{backgroundColor:'#ffffff',scale:2,useCORS:true});
+  }finally{
+    summary.classList.remove('exporting');
+  }
+  return new Promise(function(resolve){
+    canvas.toBlob(function(blob){
+      if(!blob){
+        alert('สร้างรูปไม่สำเร็จ');
+        resolve(null);
+        return;
+      }
+      resolve(blob);
+    },'image/png');
+  });
+}
+
+async function downloadSummaryPng(){
+  var blob=await exportSummaryImage();
+  if(!blob) return false;
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;
+  a.download='ตารางสรุปจัดสอนแทน-'+subDate+'.png';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(function(){URL.revokeObjectURL(url);},1000);
+  return true;
+}
+
+async function copySummaryPng(){
+  var blob=await exportSummaryImage();
+  if(!blob) return false;
+  if(!navigator.clipboard || typeof ClipboardItem==='undefined'){
+    alert('เบราว์เซอร์นี้ยังไม่รองรับการคัดลอกรูป');
+    return false;
+  }
+  try{
+    await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+    alert('คัดลอกรูปตารางสรุปแล้ว');
+    return true;
+  }catch(e){
+    alert('คัดลอกรูปไม่สำเร็จ');
+    return false;
+  }
+}
+
 function buildLegend(){
   var base='<div class="legend"><div class="legend-item"><div class="legend-dot" style="background:var(--blue-lt);border:1px solid #b5d4f4"></div>ช่วงเช้า</div><div class="legend-item"><div class="legend-dot" style="background:var(--amber-lt);border:1px solid #f9cb75"></div>พักกลางวัน</div><div class="legend-item"><div class="legend-dot" style="background:var(--org-lt);border:1px solid #f9c28a"></div>ช่วงบ่าย</div>';
   if(mode==='teacher') return base+'<div class="legend-item"><div class="legend-dot" style="background:var(--blue-lt);border:1px solid #b5d4f4"></div>ป.</div><div class="legend-item"><div class="legend-dot" style="background:var(--purp-lt);border:1px solid #c9b8ef"></div>ม.</div></div>';
   return base+'<div class="legend-item"><div class="legend-dot" style="background:var(--purp-lt);border:1px solid #c9b8ef"></div>กิจกรรมพิเศษ</div></div>';
 }
 
-// ===== FILTER BAR =====
 function buildFilterBar(){
   var fb=document.getElementById('filter-bar');
   if(mode==='sub'){fb.innerHTML='';fb.style.display='none';return;}
   fb.style.display='flex';
   var items=mode==='day'?DAYS:mode==='grade'?GRADES:ALL_TEACHERS;
   var label=mode==='day'?'วัน :':mode==='grade'?'ชั้น :':'ครู :';
-  var h='<span class="filter-label">'+label+'</span>';
+  var h='<span class="filter-label">'+escapeHtml(label)+'</span>';
   items.forEach(function(item){
-    h+='<button class="chip'+(item===selected?' active':'')+'" onclick="selectItem(\''+item+'\')">'+item+'</button>';
+    h+='<button class="chip'+(item===selected?' active':'')+'" onclick=\'selectItem('+jsArg(item)+')\'>'+escapeHtml(item)+'</button>';
   });
   fb.innerHTML=h;
 }
 
-// ===== RENDER =====
 function render(){
   var content;
   if(mode==='day') content=buildDayView();
