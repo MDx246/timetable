@@ -126,7 +126,15 @@ tr:nth-child(even) .cell-subject{background:#f7f9fd;}
 .log-empty{color:var(--muted);font-size:13px;text-align:center;padding:14px;}
 .del-btn{background:none;border:none;color:#dc2626;cursor:pointer;font-size:12px;padding:2px 6px;border-radius:4px;}
 .del-btn:hover{background:#fee2e2;}
-@media(max-width:600px){header{padding:14px 16px 0;}main{padding:14px 16px;}.filter-bar{padding:10px 16px;}.sub-top{grid-template-columns:1fr;}}
+@media(max-width:600px){
+  header{padding:14px 16px 0;}
+  main{padding:14px 16px;}
+  .filter-bar{padding:10px 16px;}
+  .sub-top{grid-template-columns:1fr;}
+  .summary-item{grid-template-columns:88px 1fr auto;}
+  .summary-grade{display:none;}
+  .summary-delete{grid-column:3;grid-row:1 / span 2;align-self:center;}
+}
 </style>
 </head>
 <body>
@@ -372,6 +380,18 @@ function subLogKey(entry){
   ].join('|');
 }
 
+function isCompactDevice(){
+  return typeof window!=='undefined' && window.matchMedia && window.matchMedia('(max-width: 600px)').matches;
+}
+
+function canShareFile(file){
+  try{
+    return !!(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]})));
+  }catch(e){
+    return false;
+  }
+}
+
 function syncSubDateFromInput(){
   var dayEl=document.getElementById('sub-date');
   if(dayEl){
@@ -443,17 +463,20 @@ function renderSubBody(){
         var col=avatarCol(t);
         var isPicked=picked===t;
         var dayLoad=TEACHER_DATA[t][subDay].map(function(s,i){return {i:i,s:s};});
-      var busyCount=dayLoad.filter(function(x){return x.s;}).length;
+        var busyCount=dayLoad.filter(function(x){return x.s;}).length;
         h+='<div class="avail-card'+(isPicked?' picked':'')+'" onclick=\'togglePick('+idx+','+jsArg(t)+')\'>';
         h+='<div class="avail-avatar" style="background:'+col.bg+';color:'+col.fg+'">'+escapeHtml(t[0])+'</div>';
         h+='<div style="flex:1"><div class="avail-name">ครู'+escapeHtml(t)+(isPicked?' ✓':'')+'</div>';
         h+='<div class="avail-stat">สอน '+busyCount+' คาบในวัน'+escapeHtml(subDay)+'</div>';
-        h+='<div class="avail-periods">';
-        dayLoad.forEach(function(x){
-          if(x.i===idx) return;
-          h+=x.s?'<span class="pb pb-busy">'+escapeHtml(PERIOD_SHORT[x.i])+': '+escapeHtml(x.s.subj)+'</span>':'<span class="pb pb-free">'+escapeHtml(PERIOD_SHORT[x.i])+': ว่าง</span>';
-        });
-        h+='</div></div></div>';
+        if(!isCompactDevice() || isPicked){
+          h+='<div class="avail-periods">';
+          dayLoad.forEach(function(x){
+            if(x.i===idx) return;
+            h+=x.s?'<span class="pb pb-busy">'+escapeHtml(PERIOD_SHORT[x.i])+': '+escapeHtml(x.s.subj)+'</span>':'<span class="pb pb-free">'+escapeHtml(PERIOD_SHORT[x.i])+': ว่าง</span>';
+          });
+          h+='</div>';
+        }
+        h+='</div></div>';
       });
       h+='</div>';
       if(picked){
@@ -584,7 +607,7 @@ async function exportSummaryImage(){
   summary.classList.add('exporting');
   var canvas;
   try{
-    canvas=await html2canvas(summary,{backgroundColor:'#ffffff',scale:2,useCORS:true});
+    canvas=await html2canvas(summary,{backgroundColor:'#ffffff',scale:isCompactDevice()?1.35:2,useCORS:true});
   }finally{
     summary.classList.remove('exporting');
   }
@@ -603,10 +626,19 @@ async function exportSummaryImage(){
 async function downloadSummaryPng(){
   var blob=await exportSummaryImage();
   if(!blob) return false;
+  var file=new File([blob],'ตารางสรุปจัดสอนแทน-'+subDate+'.png',{type:'image/png'});
+  if(isCompactDevice() && canShareFile(file)){
+    try{
+      await navigator.share({files:[file],title:'ตารางสรุปจัดสอนแทน',text:'ตารางสรุปจัดสอนแทน'});
+      return true;
+    }catch(e){
+      if(e && e.name==='AbortError') return false;
+    }
+  }
   var url=URL.createObjectURL(blob);
   var a=document.createElement('a');
   a.href=url;
-  a.download='ตารางสรุปจัดสอนแทน-'+subDate+'.png';
+  a.download=file.name;
   document.body.appendChild(a);
   a.click();
   a.remove();
@@ -617,18 +649,24 @@ async function downloadSummaryPng(){
 async function copySummaryPng(){
   var blob=await exportSummaryImage();
   if(!blob) return false;
-  if(!navigator.clipboard || typeof ClipboardItem==='undefined'){
-    alert('เบราว์เซอร์นี้ยังไม่รองรับการคัดลอกรูป');
-    return false;
-  }
+  var file=new File([blob],'ตารางสรุปจัดสอนแทน-'+subDate+'.png',{type:'image/png'});
   try{
-    await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
-    alert('คัดลอกรูปตารางสรุปแล้ว');
-    return true;
-  }catch(e){
-    alert('คัดลอกรูปไม่สำเร็จ');
-    return false;
+    if(navigator.clipboard && typeof ClipboardItem!=='undefined'){
+      await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+      alert('คัดลอกรูปตารางสรุปแล้ว');
+      return true;
+    }
+  }catch(e){}
+  if(canShareFile(file)){
+    try{
+      await navigator.share({files:[file],title:'ตารางสรุปจัดสอนแทน',text:'ตารางสรุปจัดสอนแทน'});
+      return true;
+    }catch(e){
+      if(e && e.name==='AbortError') return false;
+    }
   }
+  alert('อุปกรณ์นี้ยังไม่รองรับการคัดลอกรูปโดยตรง ให้ใช้ปุ่มบันทึกแทน');
+  return false;
 }
 
 function buildLegend(){
