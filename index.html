@@ -131,6 +131,10 @@ tr:nth-child(even) .cell-subject{background:#f7f9fd;}
   main{padding:14px 16px;}
   .filter-bar{padding:10px 16px;}
   .sub-top{grid-template-columns:1fr;}
+  .avail-card{padding:10px 12px;gap:10px;}
+  .avail-avatar{width:32px;height:32px;font-size:14px;}
+  .avail-periods{gap:3px;margin-top:5px;}
+  .pb{font-size:9.5px;padding:2px 5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;}
   .summary-item{grid-template-columns:88px 1fr auto;}
   .summary-grade{display:none;}
   .summary-delete{grid-column:3;grid-row:1 / span 2;align-self:center;}
@@ -472,14 +476,12 @@ function renderSubBody(){
         h+='<div class="avail-avatar" style="background:'+col.bg+';color:'+col.fg+'">'+escapeHtml(t[0])+'</div>';
         h+='<div style="flex:1"><div class="avail-name">ครู'+escapeHtml(t)+(isPicked?' ✓':'')+'</div>';
         h+='<div class="avail-stat">สอน '+busyCount+' คาบในวัน'+escapeHtml(subDay)+'</div>';
-        if(!isCompactDevice() || isPicked){
-          h+='<div class="avail-periods">';
-          dayLoad.forEach(function(x){
-            if(x.i===idx) return;
-            h+=x.s?'<span class="pb pb-busy">'+escapeHtml(PERIOD_SHORT[x.i])+': '+escapeHtml(x.s.subj)+'</span>':'<span class="pb pb-free">'+escapeHtml(PERIOD_SHORT[x.i])+': ว่าง</span>';
-          });
-          h+='</div>';
-        }
+        h+='<div class="avail-periods">';
+        dayLoad.forEach(function(x){
+          if(x.i===idx) return;
+          h+=x.s?'<span class="pb pb-busy">'+escapeHtml(PERIOD_SHORT[x.i])+': '+escapeHtml(x.s.subj)+'</span>':'<span class="pb pb-free">'+escapeHtml(PERIOD_SHORT[x.i])+': ว่าง</span>';
+        });
+        h+='</div>';
         h+='</div></div>';
       });
       h+='</div>';
@@ -650,16 +652,61 @@ async function downloadSummaryPng(){
   return true;
 }
 
+async function copyBlobWithClipboardApi(blob){
+  if(!navigator.clipboard || typeof ClipboardItem==='undefined') return false;
+  try{
+    await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+    return true;
+  }catch(e){}
+  try{
+    await navigator.clipboard.write([new ClipboardItem({'image/png':Promise.resolve(blob)})]);
+    return true;
+  }catch(e){
+    return false;
+  }
+}
+
+async function copyBlobWithSelection(blob){
+  if(!document.createRange || !window.getSelection || !document.execCommand) return false;
+  var url=URL.createObjectURL(blob);
+  var box=document.createElement('div');
+  var img=document.createElement('img');
+  box.contentEditable='true';
+  box.style.position='fixed';
+  box.style.left='-9999px';
+  box.style.top='0';
+  img.src=url;
+  box.appendChild(img);
+  document.body.appendChild(box);
+  try{
+    if(img.decode) await img.decode().catch(function(){});
+    var range=document.createRange();
+    range.selectNodeContents(box);
+    var sel=window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    var ok=document.execCommand('copy');
+    sel.removeAllRanges();
+    return !!ok;
+  }catch(e){
+    return false;
+  }finally{
+    box.remove();
+    setTimeout(function(){URL.revokeObjectURL(url);},1000);
+  }
+}
+
 async function copySummaryPng(){
   var blob=await exportSummaryImage();
   if(!blob) return false;
-  try{
-    if(navigator.clipboard && typeof ClipboardItem!=='undefined'){
-      await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
-      alert('คัดลอกรูปตารางสรุปแล้ว');
-      return true;
-    }
-  }catch(e){}
+  if(await copyBlobWithClipboardApi(blob)){
+    alert('คัดลอกรูปตารางสรุปแล้ว');
+    return true;
+  }
+  if(await copyBlobWithSelection(blob)){
+    alert('คัดลอกรูปตารางสรุปแล้ว');
+    return true;
+  }
   alert('อุปกรณ์หรือเบราว์เซอร์นี้ยังไม่อนุญาตให้คัดลอกรูปลงคลิปบอร์ดโดยตรง');
   return false;
 }
