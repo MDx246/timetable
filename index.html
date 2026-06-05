@@ -134,6 +134,29 @@ tr:nth-child(even) .cell-subject{background:#f7f9fd;}
 .copy-preview-close{border:none;background:#f3f4f6;color:var(--text);border-radius:8px;padding:6px 10px;font-family:inherit;font-size:12px;cursor:pointer;}
 .copy-preview-img{display:block;width:100%;border:1px solid var(--border);border-radius:10px;}
 .copy-preview-note{font-size:12px;color:var(--muted);line-height:1.55;margin-top:10px;}
+.manage-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px;box-shadow:0 2px 8px rgba(26,58,107,.05);}
+.manage-grid{display:grid;grid-template-columns:repeat(4,minmax(140px,1fr));gap:10px;margin-bottom:12px;}
+.manage-field label{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-bottom:5px;}
+.manage-input,.manage-select,.manage-textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;background:#fff;color:var(--text);font-family:inherit;font-size:13px;padding:8px 10px;}
+.manage-input:focus,.manage-select:focus,.manage-textarea:focus{outline:none;border-color:var(--blue);}
+.manage-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.manage-btn{border:1.5px solid var(--border);background:#fff;color:var(--text);border-radius:8px;padding:8px 13px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;}
+.manage-btn:hover{border-color:var(--blue);color:var(--blue);}
+.manage-btn.primary{background:var(--navy);border-color:var(--navy);color:#fff;}
+.manage-btn.danger{border-color:#fecaca;color:#dc2626;}
+.manage-btn.danger:hover{background:#fee2e2;color:#b91c1c;}
+.manage-current{font-size:12px;color:var(--muted);line-height:1.55;margin-top:8px;}
+.manage-table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:700px;}
+.manage-table th{background:var(--navy);color:#fff;text-align:left;padding:8px 10px;font-weight:500;}
+.manage-table td{padding:8px 10px;border-bottom:1px solid var(--border);text-align:left;}
+.manage-table tr:last-child td{border-bottom:none;}
+.manage-row-actions{display:flex;gap:6px;flex-wrap:wrap;}
+.manage-mini{border:1px solid var(--border);background:#fff;border-radius:7px;padding:4px 8px;font-size:11.5px;font-family:inherit;cursor:pointer;}
+.manage-mini:hover{border-color:var(--blue);color:var(--blue);}
+.manage-mini.danger{border-color:#fecaca;color:#dc2626;}
+.import-box{margin-top:12px;}
+.manage-textarea{min-height:150px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;}
+.manage-note{font-size:12px;color:var(--muted);line-height:1.6;margin-top:8px;}
 @media(max-width:600px){
   header{padding:14px 16px 0;}
   main{padding:14px 16px;}
@@ -146,6 +169,9 @@ tr:nth-child(even) .cell-subject{background:#f7f9fd;}
   .summary-item{grid-template-columns:88px 1fr auto;}
   .summary-grade{display:none;}
   .summary-delete{grid-column:3;grid-row:1 / span 2;align-self:center;}
+  .manage-grid{grid-template-columns:1fr;}
+  .manage-actions{align-items:stretch;}
+  .manage-btn{flex:1;}
 }
 </style>
 </head>
@@ -156,7 +182,7 @@ tr:nth-child(even) .cell-subject{background:#f7f9fd;}
     <div>
       <div class="school-name">โรงเรียนดอนสีนวนฯ</div>
       <div class="school-sub">ตารางสอน ปีการศึกษา 2569 ภาคเรียนที่ 1</div>
-      <div class="app-meta">Version 1.4.0 · จัดทำโดย modsomphop</div>
+      <div class="app-meta">Version 1.5.0 · จัดทำโดย modsomphop</div>
     </div>
   </div>
   <div class="mode-tabs">
@@ -164,13 +190,14 @@ tr:nth-child(even) .cell-subject{background:#f7f9fd;}
     <button class="mode-tab" onclick="setMode('grade')">รายชั้น</button>
     <button class="mode-tab" onclick="setMode('teacher')">รายครู</button>
     <button class="mode-tab" onclick="setMode('sub')">จัดสอนแทน</button>
+    <button class="mode-tab" onclick="setMode('manage')">จัดการข้อมูล</button>
   </div>
 </header>
 <div class="filter-bar" id="filter-bar"></div>
 <main id="main-content"></main>
 
 <script>
-const APP_VERSION="1.4.0";
+const APP_VERSION="1.5.0";
 const APP_AUTHOR="modsomphop";
 const DAYS=["จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์"];
 const GRADES=["ป.1","ป.2","ป.3","ป.4","ป.5","ป.6","ม.1","ม.2","ม.3"];
@@ -187,13 +214,47 @@ const TEACHING_PERIODS=[PERIODS[0],PERIODS[1],PERIODS[2],PERIODS[4],PERIODS[5],P
 const PERIOD_SHORT=["คาบ 1","คาบ 2","คาบ 3","คาบ 4","คาบ 5","คาบ 6"];
 const SPECIAL=new Set(["ชุมนุม","ลูกเสือ","อบรมสุดสัปดาห์","ลดเวลาเรียน"]);
 
-const DATA={
+const DEFAULT_DATA={
   "จันทร์":{"ป.1":["ไทย|(อุบลวรรณ)","คณิต|(อุบลวรรณ)","อังกฤษ|(อุบลวรรณ)","วิทย์|(สุณิษา)","ต้านทุจริต|(อุบลวรรณ)","ลดเวลาเรียน|(อุบลวรรณ)"],"ป.2":["วิทย์|(สุณิษา)","ไทย|(พรชนก)","คณิต|(ขวัญฤทัย)","สุขศึกษา|(อนรรฆ)","อังกฤษ|(ขวัญฤทัย)","ลดเวลาเรียน|(ณัฐวุฒิ)"],"ป.3":["ไทย|(พรชนก)","คณิต|(ขวัญเนตร)","วิทย์|(สุณิษา)","อังกฤษ|(พรชนก)","สังคม|(ณัฐวุฒิ)","ลดเวลาเรียน|(สมภพ)"],"ป.4":["คณิต|(ลาวัลย์)","อังกฤษ|(ธิดาวรรณ)","พละ|(อนรรฆ)","สังคม|(ฐิติมา)","ไทย|(พรชนก)","หน้าที่พลเมือง|(ธนพล)"],"ป.5":["อังกฤษ|(ธิดาวรรณ)","คณิต|(ลาวัลย์)","อังกฤษสื่อสาร|(ธิดาวรรณ)","ดนตรี|(ธนพล)","ต้านทุจริต|(สุณิษา)","ไทย|(ธีรพัฒน์)"],"ป.6":["คณิต|(ขวัญเนตร)","ไทย|(ธีรพัฒน์)","การงานอาชีพ|(สมภพ)","เกษตร|(ณัฐวุฒิ)","หน้าที่พลเมือง|(ประสิทธิ์)","วิทย์|(สุณิษา)"],"ม.1":["วิทย์|(พิจิตรา)","คอมพิวเตอร์|(สมภพ)","ไทย|(ธีรพัฒน์)","คณิต|(ขวัญเนตร)","วิทย์เทคโน|(สมภพ)","อังกฤษ|(ธิดาวรรณ)"],"ม.2":["สังคม|(ฐิติมา)","หน้าที่พลเมือง|(ณัฐวุฒิ)","คณิต|(ขวัญเนตร)","วิทย์|(พิจิตรา)","ไทย|(ธีรพัฒน์)","สังคม|(ฐิติมา)"],"ม.3":["ดนตรี|(ธนพล)","สังคม|(ฐิติมา)","ศิลปะ|(ธนพล)","ไทย|(ธีรพัฒน์)","คณิต|(ขวัญเนตร)","สุขศึกษา|(อนรรฆ)"]},
   "อังคาร":{"ป.1":["ไทย|(อุบลวรรณ)","คณิต|(อุบลวรรณ)","วิทย์|(สุณิษา)","วิทย์เทคโน|(สมภพ)","อังกฤษ|(อุบลวรรณ)","หน้าที่พลเมือง|(อุบลวรรณ)"],"ป.2":["หน้าที่พลเมือง|(ณัฐวุฒิ)","ไทย|(พรชนก)","คณิต|(ขวัญฤทัย)","อังกฤษ|(ขวัญฤทัย)","สังคม|(ณัฐวุฒิ)","ศิลปะ|(ธนพล)"],"ป.3":["ไทย|(พรชนก)","คณิต|(ขวัญเนตร)","สังคม|(ณัฐวุฒิ)","สุขศึกษา|(อนรรฆ)","หน้าที่พลเมือง|(ประสิทธิ์)","อังกฤษ|(พรชนก)"],"ป.4":["วิทย์เทคโน|(สมภพ)","คณิต|(ลาวัลย์)","ไทย|(พรชนก)","วิทย์พลังสิบ|(พิจิตรา)","ศิลปะ|(ธนพล)","ต้านทุจริต|(ประสิทธิ์)"],"ป.5":["คณิต|(ลาวัลย์)","สังคม|(ฐิติมา)","ไทย|(ธีรพัฒน์)","วิทย์|(สุณิษา)","หน้าที่พลเมือง|(สุณิษา)","เกษตร|(อนรรฆ)"],"ป.6":["ไทย|(ธีรพัฒน์)","อังกฤษ|(ธิดาวรรณ)","สังคม|(ฐิติมา)","คณิต|(ขวัญเนตร)","วิทย์เทคโน|(สมภพ)","วิทย์พลังสิบ|(สุณิษา)"],"ม.1":["คณิต|(ขวัญเนตร)","ไทย|(ธีรพัฒน์)","การงานอาชีพ|(ประสิทธิ์)","ไทย|(ธีรพัฒน์)","วิทย์|(พิจิตรา)","อังกฤษ|(ธิดาวรรณ)"],"ม.2":["อังกฤษ|(ธิดาวรรณ)","สุขศึกษา|(อนรรฆ)","คณิต|(ขวัญเนตร)","ศิลปะ|(ธนพล)","พละ|(อนรรฆ)","วิทย์|(พิจิตรา)"],"ม.3":["วิทย์|(พิจิตรา)","หน้าที่พลเมือง|(ณัฐวุฒิ)","วิทย์|(พิจิตรา)","สังคม|(ฐิติมา)","คณิต|(ขวัญเนตร)","คอมพิวเตอร์เพิ่มเติม|(สมภพ)"]},
   "พุธ":{"ป.1":["ไทย|(อุบลวรรณ)","สุขศึกษา|(อนรรฆ)","คณิต|(อุบลวรรณ)","อังกฤษ|(อุบลวรรณ)","สังคม|(ณัฐวุฒิ)","ชุมนุม"],"ป.2":["ไทย|(พรชนก)","คณิต|(ขวัญฤทัย)","วิทย์เทคโน|(สมภพ)","วิทย์|(สุณิษา)","อังกฤษ|(ขวัญฤทัย)","ชุมนุม"],"ป.3":["วิทย์เทคโน|(สมภพ)","คณิต|(ขวัญเนตร)","ไทย|(พรชนก)","อังกฤษ|(พรชนก)","อังกฤษ|(พรชนก)","ชุมนุม"],"ป.4":["อังกฤษ|(ธิดาวรรณ)","ไทย|(พรชนก)","คณิต|(ลาวัลย์)","ประวัติ|(ณัฐวุฒิ)","เกษตร|(ธนพล)","ชุมนุม"],"ป.5":["คณิต|(ลาวัลย์)","วิทย์เทคโน|(สมภพ)","ไทย|(ธีรพัฒน์)","สุขศึกษา|(อนรรฆ)","พละ|(อนรรฆ)","ชุมนุม"],"ป.6":["พละ|(อนรรฆ)","ไทย|(ธีรพัฒน์)","อังกฤษ|(ธิดาวรรณ)","คณิต|(ขวัญเนตร)","ต้านทุจริต|(สุณิษา)","ชุมนุม"],"ม.1":["คณิตเพิ่มเติม|(ขวัญเนตร)","ดนตรี|(ธนพล)","สังคม|(ฐิติมา)","วิทย์|(พิจิตรา)","คอมพิวเตอร์|(สมภพ)","ชุมนุม"],"ม.2":["การงานอาชีพ|(ประสิทธิ์)","อังกฤษ|(ธิดาวรรณ)","วิทย์|(พิจิตรา)","ไทย|(ธีรพัฒน์)","คณิต|(ขวัญเนตร)","ชุมนุม"],"ม.3":["ประวัติ|(ณัฐวุฒิ)","วิทย์|(พิจิตรา)","คณิต|(ขวัญเนตร)","อังกฤษ|(ธิดาวรรณ)","สังคม|(ฐิติมา)","ชุมนุม"]},
   "พฤหัสบดี":{"ป.1":["ไทย|(อุบลวรรณ)","ศิลปะ|(ธนพล)","คณิต|(อุบลวรรณ)","ประวัติ|(พิจิตรา)","อังกฤษ|(อุบลวรรณ)","ลูกเสือ"],"ป.2":["อังกฤษ|(ขวัญฤทัย)","สังคม|(ณัฐวุฒิ)","คณิต|(ขวัญฤทัย)","ไทย|(พรชนก)","งานบ้าน|(พิจิตรา)","ลูกเสือ"],"ป.3":["ประวัติ|(ณัฐวุฒิ)","คณิต|(ขวัญเนตร)","วิทย์|(สุณิษา)","ต้านทุจริต|(อนรรฆ)","ไทย|(พรชนก)","ลูกเสือ"],"ป.4":["วิทย์|(สุณิษา)","คณิต|(ลาวัลย์)","ไทย|(พรชนก)","สังคม|(ฐิติมา)","อังกฤษสื่อสาร|(สุณิษา)","ลูกเสือ"],"ป.5":["การงานอาชีพ|(สมภพ)","วิทย์|(สุณิษา)","คณิต|(ลาวัลย์)","ศิลปะ|(ธนพล)","ประวัติ|(ณัฐวุฒิ)","ลูกเสือ"],"ป.6":["ศิลปะ|(ธนพล)","สังคม|(ฐิติมา)","คณิต|(ขวัญเนตร)","ไทย|(ธีรพัฒน์)","อังกฤษ|(ธิดาวรรณ)","ลูกเสือ"],"ม.1":["คณิตเพิ่มเติม|(ขวัญเนตร)","อังกฤษ|(ธิดาวรรณ)","ศิลปะ|(ธนพล)","หน้าที่พลเมือง|(ณัฐวุฒิ)","สุขศึกษา|(อนรรฆ)","ลูกเสือ"],"ม.2":["ไทย|(ธีรพัฒน์)","คอมพิวเตอร์|(สมภพ)","วิทย์เพิ่มเติม|(พิจิตรา)","วิทย์เทคโน|(สมภพ)","ดนตรี|(ธนพล)","ลูกเสือ"],"ม.3":["วิทย์เพิ่มเติม|(พิจิตรา)","พละ|(อนรรฆ)","วิทย์เทคโน|(สมภพ)","อังกฤษ|(ธิดาวรรณ)","ไทย|(ธีรพัฒน์)","ลูกเสือ"]},
   "ศุกร์":{"ป.1":["ไทย|(อุบลวรรณ)","คณิต|(อุบลวรรณ)","อังกฤษ|(อุบลวรรณ)","งานบ้าน|(อุบลวรรณ)","สังคม|(ณัฐวุฒิ)","อบรมสุดสัปดาห์"],"ป.2":["ประวัติ|(ธนพล)","คณิต|(ขวัญฤทัย)","ไทย|(พรชนก)","ต้านทุจริต|(อนรรฆ)","อังกฤษ|(ขวัญฤทัย)","อบรมสุดสัปดาห์"],"ป.3":["งานบ้าน|(พิจิตรา)","คณิต|(ขวัญเนตร)","ศิลปะ|(ธนพล)","อังกฤษ|(พรชนก)","ไทย|(พรชนก)","อบรมสุดสัปดาห์"],"ป.4":["สุขศึกษา|(อนรรฆ)","การงานอาชีพ|(ประสิทธิ์)","อังกฤษสื่อสาร|(สุณิษา)","ดนตรี|(ธนพล)","วิทย์|(สุณิษา)","อบรมสุดสัปดาห์"],"ป.5":["อังกฤษ|(ธิดาวรรณ)","ไทย|(ธีรพัฒน์)","สังคม|(ฐิติมา)","อังกฤษสื่อสาร|(ธิดาวรรณ)","วิทย์พลังสิบ|(พิจิตรา)","อบรมสุดสัปดาห์"],"ป.6":["วิทย์|(สุณิษา)","อังกฤษ|(ธิดาวรรณ)","สุขศึกษา|(อนรรฆ)","ประวัติ|(ณัฐวุฒิ)","ดนตรี|(ธนพล)","อบรมสุดสัปดาห์"],"ม.1":["คณิต|(ขวัญเนตร)","สังคม|(ฐิติมา)","ประวัติ|(ณัฐวุฒิ)","สังคม|(ฐิติมา)","พละ|(อนรรฆ)","อบรมสุดสัปดาห์"],"ม.2":["คอมพิวเตอร์|(สมภพ)","ประวัติ|(ณัฐวุฒิ)","อังกฤษ|(ธิดาวรรณ)","วิทย์เพิ่มเติม|(พิจิตรา)","สังคม|(ฐิติมา)","อบรมสุดสัปดาห์"],"ม.3":["ไทย|(ธีรพัฒน์)","วิทย์เพิ่มเติม|(พิจิตรา)","การงานอาชีพ|(ประสิทธิ์)","คอมพิวเตอร์เพิ่มเติม|(สมภพ)","อังกฤษ|(ธิดาวรรณ)","อบรมสุดสัปดาห์"]},
 };
+
+function cloneScheduleData(data){
+  return JSON.parse(JSON.stringify(data));
+}
+
+function normalizeScheduleData(data){
+  var base=cloneScheduleData(DEFAULT_DATA);
+  if(!data || typeof data!=='object') return base;
+  DAYS.forEach(function(day){
+    if(!data[day] || typeof data[day]!=='object') return;
+    GRADES.forEach(function(grade){
+      if(!Array.isArray(data[day][grade])) return;
+      base[day][grade]=[0,1,2,3,4,5].map(function(i){
+        return typeof data[day][grade][i]==='string'?data[day][grade][i]:'';
+      });
+    });
+  });
+  return base;
+}
+
+function loadScheduleData(){
+  try{
+    var raw=localStorage.getItem('scheduleData');
+    return raw?normalizeScheduleData(JSON.parse(raw)):cloneScheduleData(DEFAULT_DATA);
+  }catch(e){
+    return cloneScheduleData(DEFAULT_DATA);
+  }
+}
+
+function saveScheduleData(){
+  localStorage.setItem('scheduleData',JSON.stringify(DATA));
+}
+
+let DATA=loadScheduleData();
 
 function parse(raw){
   var parts=String(raw).split('|');
@@ -238,10 +299,22 @@ function createTeacherData(){
   return teachers;
 }
 
-const TEACHER_DATA=createTeacherData();
-const ALL_TEACHERS=Object.keys(TEACHER_DATA).sort();
+let TEACHER_DATA=createTeacherData();
+let ALL_TEACHERS=Object.keys(TEACHER_DATA).sort();
 
 let mode='day', selected='จันทร์';
+
+function refreshDerivedData(){
+  TEACHER_DATA=createTeacherData();
+  ALL_TEACHERS=Object.keys(TEACHER_DATA).sort();
+  if(mode==='teacher' && !TEACHER_DATA[selected]){
+    selected=ALL_TEACHERS[0]||'';
+  }
+  if(mode==='sub' && !TEACHER_DATA[subAbsentTeacher]){
+    subAbsentTeacher=ALL_TEACHERS[0]||'';
+    subPickedMap={};
+  }
+}
 
 function isSpecial(s){return SPECIAL.has(s);}
 
@@ -332,6 +405,7 @@ function buildTeacherView(){
 
 var subLog=safeLoadLog();
 var subDate=todayIso(), subDay=weekdayFromIso(subDate), subAbsentTeacher=ALL_TEACHERS[0], subPickedMap={};
+var manageDay='จันทร์', manageGrade='ป.1', managePeriodIdx=0;
 
 function safeLoadLog(){
   try{
@@ -771,6 +845,163 @@ async function copySummaryPng(){
   return false;
 }
 
+function rawSubject(subject,teacher){
+  subject=String(subject||'').trim();
+  teacher=String(teacher||'').trim();
+  if(!subject) return '';
+  return teacher?subject+'|('+teacher+')':subject;
+}
+
+function currentManageRaw(){
+  return (DATA[manageDay] && DATA[manageDay][manageGrade])?DATA[manageDay][manageGrade][managePeriodIdx]||'':'';
+}
+
+function syncManageInputsFromData(){
+  var raw=currentManageRaw();
+  var parsed=raw?parse(raw):{subj:'',teacher:''};
+  var subjEl=document.getElementById('manage-subject');
+  var teacherEl=document.getElementById('manage-teacher');
+  if(subjEl) subjEl.value=parsed.subj;
+  if(teacherEl) teacherEl.value=parsed.teacher;
+}
+
+function buildManageView(){
+  var raw=currentManageRaw();
+  var parsed=raw?parse(raw):{subj:'',teacher:''};
+  var h='<div class="manage-panel">';
+  h+='<div class="manage-grid">';
+  h+='<div class="manage-field"><label>วัน</label><select class="manage-select" id="manage-day" onchange="manageDay=this.value;syncManageInputsFromData();renderManageBody()">'+DAYS.map(function(d){return '<option value="'+escapeHtml(d)+'"'+(d===manageDay?' selected':'')+'>'+escapeHtml(d)+'</option>';}).join('')+'</select></div>';
+  h+='<div class="manage-field"><label>ชั้น</label><select class="manage-select" id="manage-grade" onchange="manageGrade=this.value;syncManageInputsFromData();renderManageBody()">'+GRADES.map(function(g){return '<option value="'+escapeHtml(g)+'"'+(g===manageGrade?' selected':'')+'>'+escapeHtml(g)+'</option>';}).join('')+'</select></div>';
+  h+='<div class="manage-field"><label>คาบ</label><select class="manage-select" id="manage-period" onchange="managePeriodIdx=Number(this.value);syncManageInputsFromData();renderManageBody()">'+PERIOD_SHORT.map(function(p,i){return '<option value="'+i+'"'+(i===managePeriodIdx?' selected':'')+'>'+escapeHtml(p+' · '+timeLabelForPeriod(i))+'</option>';}).join('')+'</select></div>';
+  h+='<div class="manage-field"><label>เวลา</label><input class="manage-input" value="'+escapeHtml(timeLabelForPeriod(managePeriodIdx))+'" disabled></div>';
+  h+='</div>';
+  h+='<div class="manage-grid">';
+  h+='<div class="manage-field"><label>วิชา/กิจกรรม</label><input class="manage-input" id="manage-subject" value="'+escapeHtml(parsed.subj)+'" placeholder="เช่น วิทย์เทคโน"></div>';
+  h+='<div class="manage-field"><label>ครูผู้สอน</label><input class="manage-input" id="manage-teacher" value="'+escapeHtml(parsed.teacher)+'" placeholder="เช่น สมภพ"></div>';
+  h+='<div class="manage-field"><label>ข้อมูลเดิม</label><input class="manage-input" value="'+escapeHtml(raw||'ว่าง')+'" disabled></div>';
+  h+='<div class="manage-field"><label>รูปแบบ</label><input class="manage-input" value="วิชา + ชื่อครู" disabled></div>';
+  h+='</div>';
+  h+='<div class="manage-actions"><button class="manage-btn primary" onclick="saveManagedPeriod()">บันทึกคาบนี้</button><button class="manage-btn danger" onclick="deleteManagedPeriod()">ลบคาบนี้</button><button class="manage-btn" onclick="exportScheduleData()">ส่งออก JSON</button><button class="manage-btn" onclick="openScheduleImportFile()">นำเข้าไฟล์</button><button class="manage-btn danger" onclick="resetScheduleData()">คืนค่าเริ่มต้น</button></div>';
+  h+='<div class="manage-current">แก้ไขแล้วจะบันทึกในเครื่องนี้ทันที และเมนูรายวัน/รายชั้น/รายครู/จัดสอนแทนจะอัปเดตจากข้อมูลชุดเดียวกัน</div>';
+  h+='<input id="schedule-import-file" type="file" accept="application/json,.json" style="display:none" onchange="importScheduleFile(this)">';
+  h+='</div>';
+  h+='<div id="manage-body"></div>';
+  h+='<div class="manage-panel import-box"><div class="sub-summary-title">นำเข้าจากข้อความ JSON</div><textarea class="manage-textarea" id="schedule-import-text" placeholder="วาง JSON ที่ส่งออกจากระบบนี้"></textarea><div class="manage-actions" style="margin-top:8px"><button class="manage-btn primary" onclick="importScheduleText()">นำเข้าข้อมูล</button><button class="manage-btn" onclick="fillExportText()">แสดง JSON ปัจจุบัน</button></div><div class="manage-note">การนำเข้าจะเขียนทับตารางสอนทั้งหมดในเครื่องนี้ ควรส่งออกสำรองไว้ก่อน</div></div>';
+  return h;
+}
+
+function renderManageBody(){
+  var body=document.getElementById('manage-body');
+  if(!body) return;
+  var rows=(DATA[manageDay] && DATA[manageDay][manageGrade])?DATA[manageDay][manageGrade]:[];
+  var h='<div class="table-wrap"><table class="manage-table"><thead><tr><th>คาบ</th><th>เวลา</th><th>วิชา/กิจกรรม</th><th>ครู</th><th>จัดการ</th></tr></thead><tbody>';
+  PERIOD_SHORT.forEach(function(label,i){
+    var raw=rows[i]||'';
+    var parsed=raw?parse(raw):{subj:'ว่าง',teacher:'-'};
+    h+='<tr><td>'+escapeHtml(label)+'</td><td>'+escapeHtml(timeLabelForPeriod(i))+'</td><td>'+escapeHtml(parsed.subj||'ว่าง')+'</td><td>'+escapeHtml(parsed.teacher||'-')+'</td><td><div class="manage-row-actions"><button class="manage-mini" onclick="editManagedPeriod('+i+')">แก้ไข</button><button class="manage-mini danger" onclick="deleteManagedPeriodAt('+i+')">ลบ</button></div></td></tr>';
+  });
+  h+='</tbody></table></div>';
+  body.innerHTML=h;
+}
+
+function applyScheduleChange(){
+  saveScheduleData();
+  refreshDerivedData();
+  subPickedMap={};
+}
+
+function saveManagedPeriod(){
+  var subj=document.getElementById('manage-subject').value;
+  var teacher=document.getElementById('manage-teacher').value;
+  DATA[manageDay][manageGrade][managePeriodIdx]=rawSubject(subj,teacher);
+  applyScheduleChange();
+  renderManageBody();
+  syncManageInputsFromData();
+}
+
+function deleteManagedPeriod(){
+  deleteManagedPeriodAt(managePeriodIdx);
+}
+
+function deleteManagedPeriodAt(idx){
+  DATA[manageDay][manageGrade][idx]='';
+  applyScheduleChange();
+  managePeriodIdx=idx;
+  var periodEl=document.getElementById('manage-period');
+  if(periodEl) periodEl.value=String(idx);
+  renderManageBody();
+  syncManageInputsFromData();
+}
+
+function editManagedPeriod(idx){
+  managePeriodIdx=idx;
+  var periodEl=document.getElementById('manage-period');
+  if(periodEl) periodEl.value=String(idx);
+  syncManageInputsFromData();
+}
+
+function exportScheduleData(){
+  var payload={version:APP_VERSION,author:APP_AUTHOR,exportedAt:new Date().toISOString(),data:DATA};
+  var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;
+  a.download='ตารางสอน-โรงเรียนดอนสีนวน-'+todayIso()+'.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(function(){URL.revokeObjectURL(url);},1000);
+}
+
+function fillExportText(){
+  var el=document.getElementById('schedule-import-text');
+  if(el) el.value=JSON.stringify({version:APP_VERSION,author:APP_AUTHOR,data:DATA},null,2);
+}
+
+function importScheduleObject(obj){
+  var incoming=obj && obj.data?obj.data:obj;
+  DATA=normalizeScheduleData(incoming);
+  applyScheduleChange();
+  render();
+  alert('นำเข้าข้อมูลตารางสอนแล้ว');
+}
+
+function importScheduleText(){
+  var el=document.getElementById('schedule-import-text');
+  try{
+    importScheduleObject(JSON.parse(el.value));
+  }catch(e){
+    alert('นำเข้าไม่สำเร็จ: JSON ไม่ถูกต้อง');
+  }
+}
+
+function importScheduleFile(input){
+  var file=input.files && input.files[0];
+  if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(){
+    try{
+      importScheduleObject(JSON.parse(reader.result));
+    }catch(e){
+      alert('นำเข้าไม่สำเร็จ: ไฟล์ JSON ไม่ถูกต้อง');
+    }
+    input.value='';
+  };
+  reader.readAsText(file);
+}
+
+function openScheduleImportFile(){
+  var input=document.getElementById('schedule-import-file');
+  if(input) input.click();
+}
+
+function resetScheduleData(){
+  if(!confirm('ต้องการคืนค่าตารางสอนเริ่มต้นทั้งหมดหรือไม่?')) return;
+  DATA=cloneScheduleData(DEFAULT_DATA);
+  applyScheduleChange();
+  render();
+}
+
 function buildLegend(){
   var base='<div class="legend"><div class="legend-item"><div class="legend-dot" style="background:var(--blue-lt);border:1px solid #b5d4f4"></div>ช่วงเช้า</div><div class="legend-item"><div class="legend-dot" style="background:var(--amber-lt);border:1px solid #f9cb75"></div>พักกลางวัน</div><div class="legend-item"><div class="legend-dot" style="background:var(--org-lt);border:1px solid #f9c28a"></div>ช่วงบ่าย</div>';
   if(mode==='teacher') return base+'<div class="legend-item"><div class="legend-dot" style="background:var(--blue-lt);border:1px solid #b5d4f4"></div>ป.</div><div class="legend-item"><div class="legend-dot" style="background:var(--purp-lt);border:1px solid #c9b8ef"></div>ม.</div></div>';
@@ -779,7 +1010,7 @@ function buildLegend(){
 
 function buildFilterBar(){
   var fb=document.getElementById('filter-bar');
-  if(mode==='sub'){fb.innerHTML='';fb.style.display='none';return;}
+  if(mode==='sub'||mode==='manage'){fb.innerHTML='';fb.style.display='none';return;}
   fb.style.display='flex';
   var items=mode==='day'?DAYS:mode==='grade'?GRADES:ALL_TEACHERS;
   var label=mode==='day'?'วัน :':mode==='grade'?'ชั้น :':'ครู :';
@@ -795,10 +1026,12 @@ function render(){
   if(mode==='day') content=buildDayView();
   else if(mode==='grade') content=buildGradeView();
   else if(mode==='teacher') content=buildTeacherView();
-  else content=buildSubView();
+  else if(mode==='sub') content=buildSubView();
+  else content=buildManageView();
   var mc=document.getElementById('main-content');
-  mc.innerHTML=(mode==='sub'?'':buildLegend())+content;
+  mc.innerHTML=(mode==='sub'||mode==='manage'?'':buildLegend())+content;
   if(mode==='sub') renderSubBody();
+  if(mode==='manage') renderManageBody();
   buildFilterBar();
 }
 
@@ -809,7 +1042,7 @@ function setMode(m){
   else if(m==='teacher') selected=ALL_TEACHERS[0];
   else selected='';
   document.querySelectorAll('.mode-tab').forEach(function(el,i){
-    el.classList.toggle('active',(i===0&&m==='day')||(i===1&&m==='grade')||(i===2&&m==='teacher')||(i===3&&m==='sub'));
+    el.classList.toggle('active',(i===0&&m==='day')||(i===1&&m==='grade')||(i===2&&m==='teacher')||(i===3&&m==='sub')||(i===4&&m==='manage'));
   });
   render();
 }
