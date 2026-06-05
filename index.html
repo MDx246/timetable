@@ -183,6 +183,7 @@ const PERIODS=[
   {label:"คาบ 5",time:"13.30–14.30",type:"afternoon"},
   {label:"คาบ 6",time:"14.30–15.30",type:"afternoon"},
 ];
+const TEACHING_PERIODS=[PERIODS[0],PERIODS[1],PERIODS[2],PERIODS[4],PERIODS[5],PERIODS[6]];
 const PERIOD_SHORT=["คาบ 1","คาบ 2","คาบ 3","คาบ 4","คาบ 5","คาบ 6"];
 const SPECIAL=new Set(["ชุมนุม","ลูกเสือ","อบรมสุดสัปดาห์","ลดเวลาเรียน"]);
 
@@ -381,7 +382,7 @@ function thaiDateLabel(iso){
 }
 
 function timeLabelForPeriod(periodIdx){
-  return PERIODS[periodIdx]?PERIODS[periodIdx].time:'';
+  return TEACHING_PERIODS[periodIdx]?TEACHING_PERIODS[periodIdx].time:'';
 }
 
 function subLogKey(entry){
@@ -472,7 +473,7 @@ function renderSubBody(){
     }
     var picked=subPickedMap[idx]||null;
     h+='<div class="sub-period-block">';
-    h+='<div class="sub-original"><div class="sub-original-hdr">📋 '+escapeHtml(PERIOD_SHORT[idx])+' · '+escapeHtml(PERIODS[idx].time)+' — ต้องหาครูสอนแทน</div>';
+    h+='<div class="sub-original"><div class="sub-original-hdr">📋 '+escapeHtml(PERIOD_SHORT[idx])+' · '+escapeHtml(timeLabelForPeriod(idx))+' — ต้องหาครูสอนแทน</div>';
     h+='<div class="sub-orig-row"><span class="sub-orig-badge">'+escapeHtml(data.grade)+'</span> <span style="font-size:13px;font-weight:500">'+escapeHtml(data.subj)+'</span> <span style="font-size:12px;color:var(--amber)">( ครู'+escapeHtml(subAbsentTeacher)+' )</span></div></div>';
     if(freeList.length===0){
       h+='<div class="no-free">ครูทุกคนมีคาบใน'+escapeHtml(PERIOD_SHORT[idx])+' ไม่มีครูว่าง</div>';
@@ -554,7 +555,7 @@ function renderLogHTML(){
     h+='<div class="summary-group-head"><div><div class="summary-group-date">'+escapeHtml(dayLabel)+'</div><div class="summary-group-sub">วัน'+escapeHtml(group.data.day||weekdayFromIso(group.data.date))+' · '+periodCount+' รายการ</div></div><div class="summary-badges"><span class="summary-pill primary">'+escapeHtml(periodCount+' คาบ')+'</span></div></div>';
     group.data.entries.forEach(function(pair){
       var e=pair.entry;
-      h+='<div class="summary-item"><div><div class="summary-time">'+escapeHtml(e.periodTime||PERIODS[e.periodIdx||0].time||'')+'</div><div class="summary-meta">'+escapeHtml(e.periodLabel||'')+'</div></div><div><div class="summary-main"><strong>'+escapeHtml(e.grade||'')+'</strong> '+escapeHtml(e.subject||e.original||'')+'</div><div class="summary-meta">ครูเดิม '+escapeHtml(e.absentTeacher||'')+' · ครูสอนแทน <strong>ครู'+escapeHtml(e.substitute||'')+'</strong></div></div><div class="summary-grade">'+escapeHtml(e.day||group.data.day||'')+'</div><button class="summary-delete" onclick=\'deleteSubByKey('+jsArg(pair.key)+')\'>ลบ</button></div>';
+      h+='<div class="summary-item"><div><div class="summary-time">'+escapeHtml(timeLabelForPeriod(e.periodIdx)||e.periodTime||'')+'</div><div class="summary-meta">'+escapeHtml(e.periodLabel||'')+'</div></div><div><div class="summary-main"><strong>'+escapeHtml(e.grade||'')+'</strong> '+escapeHtml(e.subject||e.original||'')+'</div><div class="summary-meta">ครูเดิม '+escapeHtml(e.absentTeacher||'')+' · ครูสอนแทน <strong>ครู'+escapeHtml(e.substitute||'')+'</strong></div></div><div class="summary-grade">'+escapeHtml(e.day||group.data.day||'')+'</div><button class="summary-delete" onclick=\'deleteSubByKey('+jsArg(pair.key)+')\'>ลบ</button></div>';
     });
     h+='</div>';
   });
